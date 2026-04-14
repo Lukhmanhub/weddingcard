@@ -394,38 +394,44 @@
         <h1 class="hero-cname" id="hcn-bride">Henna Shireen</h1>
       </div>
 
-      <!-- Date + Countdown -->
+      <!-- Date pill -->
       <div class="hero-bottom">
-        <div class="hero-date-bar">
-          <div class="hero-date-left">
-            <span class="hero-date-label" data-i18n="date-label">Wedding date</span>
-            <span class="hero-date-value" data-i18n="date-value">20th May 2026</span>
-          </div>
-          <div class="hero-divider"></div>
-          <div class="countdown">
-            <div class="countdown-item">
-              <span class="countdown-label" data-i18n="cd-label-d">Days</span>
-              <span class="countdown-value" id="cd-days">--</span>
-            </div>
-            <div class="countdown-item">
-              <span class="countdown-label" data-i18n="cd-label-h">Hours</span>
-              <span class="countdown-value" id="cd-hours">--</span>
-            </div>
-            <div class="countdown-item">
-              <span class="countdown-label" data-i18n="cd-label-m">Min</span>
-              <span class="countdown-value" id="cd-mins">--</span>
-            </div>
-            <div class="countdown-item">
-              <span class="countdown-label" data-i18n="cd-label-s">Sec</span>
-              <span class="countdown-value" id="cd-secs">--</span>
-            </div>
-          </div>
+        <div class="hero-date-pill">
+          <i data-lucide="calendar-heart" width="15" height="15"></i>
+          <span class="hero-date-pill-main">Wednesday · 20th May 2026</span>
+          <span class="hero-date-pill-loc">· Ramanattukara</span>
         </div>
       </div>
 
       <!-- Scroll hint -->
       <div class="hero-scroll-hint">
         <i data-lucide="chevrons-down" width="22" height="22"></i>
+      </div>
+    </section>
+
+    <!-- ── Countdown Section ─────────────────────────────────────────── -->
+    <section class="countdown-section">
+      <p class="countdown-headline">Until they say I Do 💍</p>
+      <div class="countdown-cards">
+        <div class="countdown-card" id="ccard-days">
+          <span class="countdown-value" id="cd-days">--</span>
+          <span class="countdown-unit">Days</span>
+        </div>
+        <span class="countdown-sep">✦</span>
+        <div class="countdown-card" id="ccard-hours">
+          <span class="countdown-value" id="cd-hours">--</span>
+          <span class="countdown-unit">Hours</span>
+        </div>
+        <span class="countdown-sep">✦</span>
+        <div class="countdown-card" id="ccard-mins">
+          <span class="countdown-value" id="cd-mins">--</span>
+          <span class="countdown-unit">Min</span>
+        </div>
+        <span class="countdown-sep">✦</span>
+        <div class="countdown-card" id="ccard-secs">
+          <span class="countdown-value" id="cd-secs">--</span>
+          <span class="countdown-unit">Sec</span>
+        </div>
       </div>
     </section>
 
@@ -1037,6 +1043,12 @@
       const el = document.getElementById(id);
       if (el.textContent === newVal) return;
       el.classList.add('flipping');
+      const card = el.closest('.countdown-card');
+      if (card) {
+        card.classList.remove('ticking');
+        void card.offsetWidth;
+        card.classList.add('ticking');
+      }
       setTimeout(() => {
         el.textContent = newVal;
         el.classList.remove('flipping');
