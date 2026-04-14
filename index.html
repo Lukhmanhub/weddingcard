@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/gilroy-free" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="preconnect" href="https://unpkg.com" crossorigin />
   <script>
     // Skip intro immediately if already seen — runs before paint to avoid flash
@@ -115,36 +115,79 @@
     }
     #btn-skip:hover { color: rgba(255,255,255,0.85); }
 
-    /* ── Language Strip ─────────────────────────────────────────────── */
-    .lang-strip {
+    /* ── How-to-Reach slide-in panel ────────────────────────────────── */
+    .reach-panel {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      background: var(--bg);
+      transform: translateX(100%);
+      transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
       display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      padding: 8px 16px 0;
-      gap: 4px;
+      justify-content: center;
     }
-    .lang-pill {
-      font-size: 12px;
-      font-weight: 600;
-      padding: 4px 12px;
-      border-radius: 20px;
-      border: 1.5px solid rgba(255, 73, 52, 0.22);
-      background: transparent;
-      color: var(--gray);
-      cursor: pointer;
-      transition: background 0.18s, color 0.18s, border-color 0.18s;
-      font-family: 'Plus Jakarta Sans', sans-serif;
+    .reach-panel.open { transform: translateX(0); }
+
+    /* back-btn hover */
+    .back-btn {
+      transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1),
+                  background 0.18s, box-shadow 0.18s;
     }
-    .lang-pill.active {
-      background: var(--primary);
-      color: #fff;
-      border-color: var(--primary);
+    .back-btn:hover  { transform: translateX(-3px); background: var(--primary-light); }
+    .back-btn:active { transform: scale(0.92); }
+
+    /* header phone pulse ring */
+    .header-phone-btn { position: relative; }
+    .header-phone-btn::after {
+      content: '';
+      position: absolute; inset: 0;
+      border-radius: 50%;
+      border: 2px solid rgba(255,73,52,0.3);
+      pointer-events: none;
+      animation: call-ring 2.8s ease-out infinite;
     }
-    .lang-sep { color: #d0d0d0; font-size: 13px; }
-    /* Malayalam font applied to all translated elements when ML mode is active */
-    .phone-wrapper.ml-active [data-i18n] {
-      font-family: 'Noto Sans Malayalam', sans-serif !important;
+    @keyframes call-ring {
+      0%   { transform: scale(1);   opacity: 0.8; }
+      100% { transform: scale(1.8); opacity: 0;   }
     }
+
+    /* reach section hover */
+    .reach-section { transition: transform 0.25s ease; }
+    .reach-section:hover { transform: translateX(4px); }
+    .reach-mode-icon {
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), background 0.2s;
+    }
+    .reach-section:hover .reach-mode-icon {
+      transform: translateY(-4px) scale(1.1);
+      background: var(--primary-light);
+    }
+    .reach-highlight { display: inline-block; transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1); }
+    .reach-section:hover .reach-highlight { transform: scale(1.06); }
+
+    /* map link */
+    .reach-map-link {
+      display: flex; align-items: center; gap: 6px;
+      color: var(--primary); text-decoration: none;
+      font-size: 13px; font-weight: 600;
+      margin-top: 8px; padding: 8px 12px;
+      background: var(--primary-light); border-radius: 8px;
+      width: fit-content;
+      transition: background 0.18s, transform 0.18s;
+    }
+    .reach-map-link:hover { background: rgba(255,73,52,0.18); transform: translateY(-1px); }
+    .reach-map-link svg { flex-shrink: 0; }
+
+    /* eta chips */
+    .reach-eta-row { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+    .reach-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: var(--gray-light); border-radius: 20px;
+      padding: 5px 12px; font-size: 13px; font-weight: 600;
+      color: var(--black); letter-spacing: -0.3px;
+    }
+    .reach-chip svg { color: var(--primary); }
 
     /* ── Sound Toggle (fixed, always visible when music loaded) ──────── */
     #sound-btn {
@@ -223,21 +266,14 @@
   <!-- ══ Main Wedding Website ═════════════════════════════════════════════ -->
   <div class="phone-wrapper">
 
-    <!-- Language Toggle -->
-    <div class="lang-strip">
-      <button class="lang-pill active" id="lang-en" onclick="setLang('en')">EN</button>
-      <span class="lang-sep">|</span>
-      <button class="lang-pill" id="lang-ml" onclick="setLang('ml')">മലയാളം</button>
-    </div>
-
     <!-- Hero -->
     <section class="hero">
       <div class="hero-bg"></div>
       <div class="hero-gradient"></div>
       <div class="hero-content">
         <h1 class="hero-greeting">
-          <span data-i18n="greeting">Hey fam,</span>
-          <span data-i18n="salaam">Assalamu Alaykum</span>
+          Hey fam,
+          <span>Assalamu Alaykum</span>
         </h1>
         <div class="hero-date-bar">
           <div class="hero-date-left">
@@ -319,7 +355,7 @@
         </a>
 
         <!-- How to Reach -->
-        <a class="info-card" href="how-to-reach.html">
+        <a class="info-card" href="#" onclick="openReach(); return false;">
           <div class="info-card-top">
             <div class="info-card-icon">
               <i data-lucide="luggage" width="22" height="22"></i>
@@ -464,6 +500,124 @@
     </div>
   </div>
 
+  <!-- ══ How-to-Reach Panel ══════════════════════════════════════════════ -->
+  <div id="reach-panel" class="reach-panel" aria-hidden="true">
+    <div class="phone-wrapper">
+
+      <header class="page-header">
+        <button class="back-btn" onclick="closeReach()" aria-label="Go back">
+          <i data-lucide="arrow-left" width="22" height="22"></i>
+        </button>
+        <h1 class="page-title">How to reach</h1>
+        <a class="header-phone-btn" href="tel:+918606805836" aria-label="Call for enquiry" onclick="ripple(event,this)">
+          <i data-lucide="phone" width="22" height="22"></i>
+        </a>
+      </header>
+
+      <div class="reach-content">
+        <div class="reach-card">
+
+          <!-- By Air -->
+          <div class="reach-section">
+            <div class="reach-mode">
+              <div class="reach-mode-icon">
+                <i data-lucide="plane" width="24" height="24"></i>
+              </div>
+              <div><span class="reach-mode-title">By Air</span></div>
+            </div>
+            <div class="reach-details">
+              <ul>
+                <li>Nearest airport: <span class="reach-highlight">Calicut International Airport (CCJ)</span></li>
+                <li>App-based taxi or local taxi recommended</li>
+              </ul>
+              <div class="reach-eta-row">
+                <span class="reach-chip"><i data-lucide="map-pin" width="13" height="13"></i><span class="reach-highlight">14.3 km</span></span>
+                <span class="reach-chip"><i data-lucide="clock" width="13" height="13"></i><span class="reach-highlight">~30 min</span></span>
+              </div>
+              <a class="reach-map-link" href="https://maps.google.com/?q=Calicut+International+Airport" target="_blank" rel="noopener">
+                <i data-lucide="map" width="14" height="14"></i> Open in Maps
+              </a>
+            </div>
+          </div>
+
+          <div class="reach-divider"></div>
+
+          <!-- By Train -->
+          <div class="reach-section">
+            <div class="reach-mode">
+              <div class="reach-mode-icon">
+                <i data-lucide="train-front" width="24" height="24"></i>
+              </div>
+              <div><span class="reach-mode-title">By Train</span></div>
+            </div>
+            <div class="reach-details">
+              <ul>
+                <li>Nearest station: <span class="reach-highlight">Feroke Railway Station</span></li>
+                <li>App-based taxi or local Auto-rickshaw recommended</li>
+              </ul>
+              <div class="reach-eta-row">
+                <span class="reach-chip"><i data-lucide="map-pin" width="13" height="13"></i><span class="reach-highlight">4.4 km</span></span>
+                <span class="reach-chip"><i data-lucide="clock" width="13" height="13"></i><span class="reach-highlight">~10 min</span></span>
+              </div>
+              <a class="reach-map-link" href="https://maps.google.com/?q=Feroke+Railway+Station" target="_blank" rel="noopener">
+                <i data-lucide="map" width="14" height="14"></i> Open in Maps
+              </a>
+            </div>
+          </div>
+
+          <div class="reach-divider"></div>
+
+          <!-- By Bus -->
+          <div class="reach-section">
+            <div class="reach-mode">
+              <div class="reach-mode-icon">
+                <i data-lucide="bus" width="24" height="24"></i>
+              </div>
+              <div><span class="reach-mode-title">By Bus</span></div>
+            </div>
+            <div class="reach-details">
+              <ul>
+                <li>Nearest bus stand: <span class="reach-highlight">Ramanattukara Bus Stand</span></li>
+                <li>App-based taxi or local Auto-rickshaw recommended</li>
+              </ul>
+              <div class="reach-eta-row">
+                <span class="reach-chip"><i data-lucide="map-pin" width="13" height="13"></i><span class="reach-highlight">1.5 km</span></span>
+                <span class="reach-chip"><i data-lucide="clock" width="13" height="13"></i><span class="reach-highlight">~4 min</span></span>
+              </div>
+              <a class="reach-map-link" href="https://maps.google.com/?q=Ramanattukara+Bus+Stand" target="_blank" rel="noopener">
+                <i data-lucide="map" width="14" height="14"></i> Open in Maps
+              </a>
+            </div>
+          </div>
+
+          <div class="reach-divider"></div>
+
+          <!-- Venue -->
+          <div class="reach-section">
+            <div class="reach-mode">
+              <div class="reach-mode-icon" style="background:rgba(255,73,52,0.1);">
+                <i data-lucide="map-pin" width="24" height="24"></i>
+              </div>
+              <div><span class="reach-mode-title">Venue</span></div>
+            </div>
+            <div class="reach-details">
+              <ul>
+                <li><span class="reach-highlight">Malabar Avenue Auditorium</span></li>
+                <li>Ramanattukara, Kozhikode, Kerala</li>
+                <li>Event: <span class="reach-highlight">5:30 PM – 8:30 PM (IST)</span></li>
+              </ul>
+              <a class="reach-map-link" href="https://maps.google.com/?q=Malabar+Avenue+Auditorium+Ramanattukara" target="_blank" rel="noopener">
+                <i data-lucide="navigation" width="14" height="14"></i> Get Directions
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
   <!-- ══ Music Engine ══════════════════════════════════════════════════════ -->
   <script>
     var isMuted      = false;
@@ -592,7 +746,7 @@
       var badge = document.querySelector('.tap-badge');
       var rings = document.querySelectorAll('.tap-ring');
       if (badge) badge.style.animation = 'none';
-      rings.forEach(function(r) { r.style.animation = 'none'; });
+      rings.forEach(function(r) { r.style.animation = 'none'; r.style.opacity = '0'; });
     }, 3000);
 
     // ── Confetti burst on "Let's Go" ─────────────────────────────────
@@ -767,101 +921,19 @@
     }
     document.getElementById('bottomSheet').addEventListener('click', e => e.stopPropagation());
 
-    // ── Malayalam / English translation ─────────────────────────────
-    const T = {
-      en: {
-        'greeting':        'Hey fam,',
-        'salaam':          'Assalamu Alaykum',
-        'date-label':      'Wedding date',
-        'date-value':      '20th May 2026',
-        'cd-label-d':      'Days',
-        'cd-label-h':      'Hours',
-        'cd-label-m':      'Min',
-        'cd-label-s':      'Sec',
-        'groom-first':     'Mohammed',
-        'groom-last':      'Abdul Razak',
-        'groom-rel':       'S/O Abdul Razak',
-        'tap-label':       'Tap here',
-        'bride-first':     'Henna',
-        'bride-last':      'Shireen',
-        'bride-rel':       'D/O Mohammed Kallil',
-        'venue-title':     'Malabar Avenue',
-        'venue-sub':       'Auditorium',
-        'venue-link':      'Google map',
-        'reach-title':     'How to reach',
-        'reach-sub':       'Auditorium',
-        'reach-link':      'From',
-        'save-title':      'Save the date',
-        'save-sub':        'Video',
-        'save-link':       'Wedding card and video',
-        'gallery-title':   'Photo Gallery',
-        'gallery-sub':     'via Kwikpic',
-        'gallery-link':    'Get your photos',
-        'contact-header':  'Call for enquiry',
-        'contact-sub':     'Family numbers',
-        'name-ramsheer':   'Ramsheer EP',
-        'role-ramsheer':   "Groom's brother-in-law",
-        'name-razak':      'Abdul Razak P',
-        'role-razak':      "Groom's Father",
-        'name-lukhman':    'Lukhman',
-        'role-lukhman':    "Groom's Brother",
-        'weather-label':   'Weather on Wedding area',
-      },
-      ml: {
-        'greeting':        'ഹേ കൂട്ടരേ,',
-        'salaam':          'അസ്സലാമു അലൈക്കും',
-        'date-label':      'വിവാഹ തീയതി',
-        'date-value':      'മേയ് 20, 2026',
-        'cd-label-d':      'ദിവസം',
-        'cd-label-h':      'മണിക്കൂർ',
-        'cd-label-m':      'മിനി',
-        'cd-label-s':      'സെക്',
-        'groom-first':     'മുഹമ്മദ്',
-        'groom-last':      'അബ്ദുൽ റസാഖ്',
-        'groom-rel':       'പുത്രൻ: അബ്ദുൽ റസാഖ്',
-        'tap-label':       'ടാപ്പ് ചെയ്യൂ',
-        'bride-first':     'ഹെന്ന',
-        'bride-last':      'ഷിറിൻ',
-        'bride-rel':       'പുത്രി: മുഹമ്മദ് കല്ലിൽ',
-        'venue-title':     'മലബാർ അവന്യൂ',
-        'venue-sub':       'ഓഡിറ്റോറിയം',
-        'venue-link':      'ഗൂഗിൾ മാപ്പ്',
-        'reach-title':     'എങ്ങനെ എത്താം',
-        'reach-sub':       'ഓഡിറ്റോറിയം',
-        'reach-link':      'ഇവിടെ നിന്ന്',
-        'save-title':      'തീയതി ഓർക്കൂ',
-        'save-sub':        'വീഡിയോ',
-        'save-link':       'കാർഡും വീഡിയോയും',
-        'gallery-title':   'ഫോട്ടോ ഗ്യാലറി',
-        'gallery-sub':     'Kwikpic വഴി',
-        'gallery-link':    'ഫോട്ടോ ഡൗൺലോഡ് ചെയ്യൂ',
-        'contact-header':  'ബന്ധപ്പെടൂ',
-        'contact-sub':     'കുടുംബ നമ്പറുകൾ',
-        'name-ramsheer':   'റംഷീർ EP',
-        'role-ramsheer':   'വരന്റെ അളിയൻ',
-        'name-razak':      'അബ്ദുൽ റസാഖ് P',
-        'role-razak':      'വരന്റെ പിതാവ്',
-        'name-lukhman':    'ലുഖ്മാൻ',
-        'role-lukhman':    'വരന്റെ സഹോദരൻ',
-        'weather-label':   'വിവാഹ സ്ഥലത്തെ കാലാവസ്ഥ',
-      }
-    };
-
-    function setLang(lang) {
-      document.querySelectorAll('[data-i18n]').forEach(function(el) {
-        var key = el.getAttribute('data-i18n');
-        if (T[lang] && T[lang][key]) el.textContent = T[lang][key];
-      });
-      document.getElementById('lang-en').classList.toggle('active', lang === 'en');
-      document.getElementById('lang-ml').classList.toggle('active', lang === 'ml');
-      document.querySelector('.phone-wrapper').classList.toggle('ml-active', lang === 'ml');
-      localStorage.setItem('preferredLang', lang);
+    // ── How-to-Reach panel ───────────────────────────────────────────
+    function openReach() {
+      var panel = document.getElementById('reach-panel');
+      panel.classList.add('open');
+      panel.setAttribute('aria-hidden', 'false');
+      panel.scrollTop = 0;
+      lucide.createIcons({ nodes: Array.from(panel.querySelectorAll('[data-lucide]')) });
     }
-
-    // Restore saved language preference
-    (function() {
-      if (localStorage.getItem('preferredLang') === 'ml') setLang('ml');
-    })();
+    function closeReach() {
+      var panel = document.getElementById('reach-panel');
+      panel.classList.remove('open');
+      panel.setAttribute('aria-hidden', 'true');
+    }
 
   </script>
 </body>
