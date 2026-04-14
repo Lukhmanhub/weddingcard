@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mohammed & Henna — Wedding</title>
+  <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/gilroy-free" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="animations.css" />
+  <style>
+    /* ── Intro / Splash Screen ─────────────────────────────────────────── */
+    #intro {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: rgba(0,0,0,0.78);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn { from { opacity:0 } to { opacity:1 } }
+    @keyframes cardIn { from { opacity:0; transform:scale(0.92) } to { opacity:1; transform:scale(1) } }
+    @keyframes fadeOut { from { opacity:1 } to { opacity:0; pointer-events:none } }
+
+    #intro.closing { animation: fadeOut 0.45s ease forwards; }
+
+    #intro-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.18);
+      backdrop-filter: blur(6px);
+      border: 1.5px solid rgba(255,255,255,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #fff;
+      transition: background 0.2s;
+      z-index: 1001;
+    }
+    #intro-close:hover { background: rgba(255,255,255,0.32); }
+
+    #intro-card {
+      animation: cardIn 0.55s cubic-bezier(.22,.68,0,1.2);
+      max-width: 320px;
+      width: 100%;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.5), 0 4px 16px rgba(0,0,0,0.3);
+    }
+    #intro-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    #intro-cta {
+      margin-top: 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #btn-letsgo {
+      background: #FF4934;
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 14px 36px;
+      font-family: 'Gilroy', 'Plus Jakarta Sans', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 6px 20px rgba(255,73,52,0.45);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    #btn-letsgo:active { transform: scale(0.96); box-shadow: 0 3px 10px rgba(255,73,52,0.3); }
+
+    #btn-skip {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.55);
+      font-family: 'Gilroy', 'Plus Jakarta Sans', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+      letter-spacing: -0.2px;
+      padding: 4px 8px;
+    }
+    #btn-skip:hover { color: rgba(255,255,255,0.85); }
+
+    /* ── Sound Toggle (fixed, always visible when music loaded) ──────── */
+    #sound-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 16px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.92);
+      border: none;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 200;
+      color: #FF4934;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s, transform 0.15s;
+      backdrop-filter: blur(6px);
+    }
+    #sound-btn.visible { opacity: 1; pointer-events: all; }
+    #sound-btn:active { transform: scale(0.92); }
+
+    /* Hidden YouTube fallback iframe (HTTP only) */
+    #yt-wrap {
+      position: fixed;
+      left: -2px; top: -2px;
+      width: 1px; height: 1px;
+      overflow: hidden;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══ Intro Splash Screen ══════════════════════════════════════════════ -->
+  <div id="intro">
+    <button id="intro-close" aria-label="Skip intro" onclick="closeIntro(false)">
+      <i data-lucide="x" width="20" height="20"></i>
+    </button>
+
+    <div id="intro-card">
+      <img
+        src="assets/wedding-card.png"
+        alt="Wedding invitation — Mohammed Abdul Razak & Henna Shireen"
+        loading="eager"
+      />
+    </div>
+
+    <div id="intro-cta">
+      <button id="btn-letsgo" onclick="closeIntro(true)">
+        Let's Go
+        <i data-lucide="arrow-right" width="18" height="18"></i>
+      </button>
+      <button id="btn-skip" onclick="closeIntro(false)">Skip</button>
+    </div>
+  </div>
+
+  <!-- ══ Sound button ═════════════════════════════════════════════════════ -->
+  <button id="sound-btn" aria-label="Toggle music" onclick="toggleMute()">
+    <i id="sound-icon" data-lucide="volume-2" width="20" height="20"></i>
+  </button>
+
+  <!-- ══ HTML5 Audio (primary) ════════════════════════════════════════════ -->
+  <!-- Place your MP3 at assets/background-music.mp3 to enable music -->
+  <audio id="bg-music" loop preload="auto">
+    <source src="assets/background-music.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- ══ YouTube iframe fallback (works on HTTP server, not file://) ══════ -->
+  <div id="yt-wrap"></div>
+
+  <!-- ══ Main Wedding Website ═════════════════════════════════════════════ -->
+  <div class="phone-wrapper">
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-gradient"></div>
+      <div class="hero-content">
+        <h1 class="hero-greeting">
+          Hey fam,
+          <span>Assalamu Alaykum</span>
+        </h1>
+        <div class="hero-date-bar">
+          <div class="hero-date-left">
+            <span class="hero-date-label">Wedding date</span>
+            <span class="hero-date-value">20th May 2026</span>
+          </div>
+          <div class="hero-divider"></div>
+          <div class="countdown">
+            <div class="countdown-item">
+              <span class="countdown-label">Days</span>
+              <span class="countdown-value" id="cd-days">--</span>
+            </div>
+            <div class="countdown-item">
+              <span class="countdown-label">Hours</span>
+              <span class="countdown-value" id="cd-hours">--</span>
+            </div>
+            <div class="countdown-item">
+              <span class="countdown-label">Min</span>
+              <span class="countdown-value" id="cd-mins">--</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- Couple Names -->
+      <div class="couple-row">
+        <div class="couple-card">
+          <div class="couple-name-block">
+            <span class="couple-firstname">Mohammed</span>
+            <span class="couple-lastname">Abdul Razak</span>
+          </div>
+          <span class="couple-relation">S/O Abdul Razak</span>
+        </div>
+
+        <button class="tap-badge" onclick="openSheet(); spawnHearts(this)" aria-label="Download wedding assets">
+          <div class="tap-ring"></div>
+          <div class="tap-ring"></div>
+          <span class="tap-badge-label">Tap here</span>
+          <i data-lucide="scan-heart" width="22" height="22"></i>
+        </button>
+
+        <div class="couple-card" style="align-items: flex-end; text-align: right;">
+          <div class="couple-name-block" style="align-items: flex-end;">
+            <span class="couple-firstname">Henna</span>
+            <span class="couple-lastname">Shireen</span>
+          </div>
+          <span class="couple-relation">D/O Mohammed Kallil</span>
+        </div>
+      </div>
+
+      <!-- Info Grid -->
+      <div class="info-grid">
+
+        <!-- Location -->
+        <a class="info-card" href="https://maps.google.com/?q=Malabar+Avenue+Auditorium" target="_blank" rel="noopener">
+          <div class="info-card-top">
+            <div class="info-card-icon">
+              <i data-lucide="map-pin" width="22" height="22"></i>
+            </div>
+            <div class="info-card-text">
+              <span class="info-card-title">Malabar Avenue</span>
+              <span class="info-card-subtitle">Auditorium</span>
+            </div>
+          </div>
+          <div class="info-card-bottom">
+            <span class="info-card-link">Google map</span>
+            <div class="info-card-link-icon">
+              <i data-lucide="external-link" width="18" height="18"></i>
+            </div>
+          </div>
+        </a>
+
+        <!-- How to Reach -->
+        <a class="info-card" href="how-to-reach.html">
+          <div class="info-card-top">
+            <div class="info-card-icon">
+              <i data-lucide="luggage" width="22" height="22"></i>
+            </div>
+            <div class="info-card-text">
+              <span class="info-card-title">How to reach</span>
+              <span class="info-card-subtitle">Auditorium</span>
+            </div>
+          </div>
+          <div class="info-card-bottom">
+            <span class="info-card-link">From</span>
+            <div class="transport-icons">
+              <i data-lucide="bus" width="18" height="18"></i>
+              <i data-lucide="train-front" width="18" height="18"></i>
+              <i data-lucide="plane" width="18" height="18"></i>
+            </div>
+          </div>
+        </a>
+
+        <!-- Save the Date -->
+        <button class="info-card" onclick="openSheet()" style="text-align:left;border:none;background:white;cursor:pointer;">
+          <div class="info-card-top">
+            <div class="info-card-icon">
+              <i data-lucide="smartphone" width="22" height="22"></i>
+            </div>
+            <div class="info-card-text">
+              <span class="info-card-title">Save the date</span>
+              <span class="info-card-subtitle">Video</span>
+            </div>
+          </div>
+          <div class="info-card-bottom">
+            <span class="info-card-link">Wedding card and video</span>
+          </div>
+        </button>
+
+        <!-- Photo Gallery -->
+        <a class="info-card" href="https://kwikpic-in.app.link/oZqFRWqkk2b?groupCode=NUOSAZ" target="_blank" rel="noopener">
+          <div class="info-card-top">
+            <div class="info-card-icon">
+              <i data-lucide="camera" width="22" height="22"></i>
+            </div>
+            <div class="info-card-text">
+              <span class="info-card-title">Photo Gallery</span>
+              <span class="info-card-subtitle">via Kwikpic</span>
+            </div>
+          </div>
+          <div class="info-card-bottom">
+            <span class="info-card-link">Get your photos</span>
+            <div class="info-card-link-icon">
+              <i data-lucide="external-link" width="18" height="18"></i>
+            </div>
+          </div>
+        </a>
+
+      </div>
+
+      <!-- Contacts -->
+      <div class="contacts-section">
+        <div class="section-header">
+          <div class="section-header-icon">
+            <i data-lucide="phone-call" width="22" height="22"></i>
+          </div>
+          <div class="section-header-text">
+            <span class="section-header-title">Call for enquiry</span>
+            <span class="section-header-subtitle">Family numbers</span>
+          </div>
+        </div>
+        <div class="contacts-list">
+          <div class="contact-row">
+            <div class="contact-info">
+              <span class="contact-name">Ramsheer EP</span>
+              <span class="contact-role">Groom's brother-in-law</span>
+            </div>
+            <span class="contact-number">+91 9876 543 210</span>
+            <a class="call-btn" href="tel:+919876543210" aria-label="Call Ramsheer EP" onclick="ripple(event,this)">
+              <i data-lucide="phone" width="16" height="16"></i>
+            </a>
+          </div>
+          <div class="contact-row">
+            <div class="contact-info">
+              <span class="contact-name">Abdul Razak P</span>
+              <span class="contact-role">Groom's Father</span>
+            </div>
+            <span class="contact-number">+91 9452 543 210</span>
+            <a class="call-btn" href="tel:+919452543210" aria-label="Call Abdul Razak P" onclick="ripple(event,this)">
+              <i data-lucide="phone" width="16" height="16"></i>
+            </a>
+          </div>
+          <div class="contact-row">
+            <div class="contact-info">
+              <span class="contact-name">Lukhman</span>
+              <span class="contact-role">Groom's Brother</span>
+            </div>
+            <span class="contact-number">+91 2133 543 210</span>
+            <a class="call-btn" href="tel:+912133543210" aria-label="Call Lukhman" onclick="ripple(event,this)">
+              <i data-lucide="phone" width="16" height="16"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Weather Widget -->
+      <div class="weather-widget" id="weather-widget">
+        <div class="weather-bg"></div>
+        <div class="weather-sun" id="weather-sun"></div>
+        <span class="weather-label">Weather on Wedding area</span>
+        <div class="weather-temp-row">
+          <div class="weather-temp"><span id="weather-temp">--</span><sup>°C</sup></div>
+          <div class="weather-meta">
+            <span class="weather-condition" id="weather-condition">Feroke, Kerala</span>
+            <span class="weather-humidity" id="weather-humidity"></span>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ══ Download Bottom Sheet ════════════════════════════════════════════ -->
+  <div class="sheet-overlay" id="overlay" onclick="closeSheet()"></div>
+  <div class="bottom-sheet" id="bottomSheet">
+    <div class="sheet-handle"></div>
+    <h2 class="sheet-title">Download the wedding asset</h2>
+    <div class="download-list">
+      <div class="download-row">
+        <span class="download-name">Wedding card</span>
+        <a class="download-btn"
+           href="assets/wedding-card.png"
+           download="Mohammed_Henna_Wedding_Card.png"
+           aria-label="Download wedding card"
+           onclick="downloadFlash(this)">
+          <i data-lucide="download" width="18" height="18"></i>
+        </a>
+      </div>
+      <div class="download-row">
+        <span class="download-name">Save the date video</span>
+        <a class="download-btn" href="#" download aria-label="Download save the date video"
+           onclick="downloadFlash(this)">
+          <i data-lucide="download" width="18" height="18"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ Music Engine ══════════════════════════════════════════════════════ -->
+  <script>
+    var isMuted      = false;
+    var musicStarted = false;
+    var ytIframe     = null;
+    var bgAudio      = document.getElementById('bg-music');
+
+    /* ── helpers ── */
+    function showSoundBtn() {
+      document.getElementById('sound-btn').classList.add('visible');
+    }
+    function updateSoundIcon() {
+      var el = document.getElementById('sound-icon');
+      el.setAttribute('data-lucide', isMuted ? 'volume-x' : 'volume-2');
+      lucide.createIcons({ nodes: [el] });
+    }
+
+    /* ── start music (called on "Let's Go" click) ── */
+    function startMusic() {
+      if (musicStarted) return;
+
+      // 1️⃣  HTML5 audio — works on file:// and all servers, instant
+      bgAudio.volume = 0.65;
+      bgAudio.play()
+        .then(function() {
+          musicStarted = true;
+          showSoundBtn();
+          updateSoundIcon();
+        })
+        .catch(function() {
+          // 2️⃣  Fallback: YouTube iframe injected after user gesture
+          //     (works on HTTP/HTTPS servers, blocked on file://)
+          var iframe = document.createElement('iframe');
+          iframe.src = 'https://www.youtube.com/embed/MpEo6vDESzU'
+            + '?autoplay=1&controls=0&loop=1&playlist=MpEo6vDESzU'
+            + '&mute=0&fs=0&iv_load_policy=3&rel=0';
+          iframe.allow = 'autoplay; encrypted-media';
+          iframe.style.cssText = 'width:1px;height:1px;border:0;';
+          document.getElementById('yt-wrap').appendChild(iframe);
+          ytIframe = iframe;
+          musicStarted = true;
+          showSoundBtn();
+          updateSoundIcon();
+        });
+    }
+
+    /* ── mute / unmute ── */
+    function toggleMute() {
+      isMuted = !isMuted;
+
+      // HTML5 audio mute
+      if (bgAudio) bgAudio.muted = isMuted;
+
+      // YouTube iframe mute (reload src — resets position but keeps looping)
+      if (ytIframe) {
+        var base = 'https://www.youtube.com/embed/MpEo6vDESzU'
+          + '?autoplay=1&controls=0&loop=1&playlist=MpEo6vDESzU&fs=0&iv_load_policy=3&rel=0';
+        ytIframe.src = base + (isMuted ? '&mute=1' : '&mute=0');
+      }
+
+      updateSoundIcon();
+    }
+  </script>
+
+  <script>
+    // ════════════════════════════════════════════════════════════════
+    //  ANIMATION ENGINE
+    // ════════════════════════════════════════════════════════════════
+
+    // Init Lucide icons
+    lucide.createIcons();
+
+    // ── Falling petals on intro ──────────────────────────────────────
+    const PETAL_COLORS = [
+      'rgba(255,182,193,0.75)',
+      'rgba(255,218,220,0.65)',
+      'rgba(255,255,255,0.55)',
+      'rgba(220,120,140,0.5)',
+      'rgba(255,235,238,0.7)',
+    ];
+    const PETAL_RADII = [
+      '42% 58% 62% 38% / 48% 44% 56% 52%',
+      '60% 40% 38% 62% / 52% 60% 40% 48%',
+      '50% 50% 45% 55% / 55% 45% 55% 45%',
+    ];
+
+    function spawnPetals(container, count = 18) {
+      for (let i = 0; i < count; i++) {
+        const p = document.createElement('div');
+        p.className = 'petal';
+        const size = 6 + Math.random() * 10;
+        const drift = (Math.random() - 0.5) * 120;
+        const spin  = 360 + Math.floor(Math.random() * 720);
+        p.style.cssText = `
+          left:${Math.random() * 110 - 5}%;
+          top:-${size + 5}px;
+          width:${size}px;
+          height:${size * 1.3}px;
+          background:${PETAL_COLORS[Math.floor(Math.random() * PETAL_COLORS.length)]};
+          border-radius:${PETAL_RADII[Math.floor(Math.random() * PETAL_RADII.length)]};
+          --drift:${drift}px;
+          --spin:${spin}deg;
+          animation:petal-fall ${4 + Math.random() * 5}s linear forwards;
+          animation-delay:${Math.random() * 4}s;
+        `;
+        container.appendChild(p);
+        setTimeout(() => p.remove(), 10000);
+      }
+    }
+    spawnPetals(document.getElementById('intro'));
+
+    // ── Confetti burst on "Let's Go" ─────────────────────────────────
+    const CONFETTI_COLORS = ['#FF4934','#FFB6C1','#a6203b','#377a27','#FFD700','#FF8FAB'];
+    function confettiBurst(cx, cy) {
+      for (let i = 0; i < 28; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'confetti-dot';
+        const angle = (i / 28) * Math.PI * 2;
+        const dist  = 80 + Math.random() * 120;
+        dot.style.cssText = `
+          left:${cx}px; top:${cy}px;
+          width:${5 + Math.random() * 6}px;
+          height:${5 + Math.random() * 6}px;
+          border-radius:${Math.random() > 0.5 ? '50%' : '2px'};
+          background:${CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)]};
+          --cx:${Math.cos(angle) * dist}px;
+          --cy:${Math.sin(angle) * dist}px;
+          animation: confetti-fly ${0.6 + Math.random() * 0.5}s ease-out forwards;
+        `;
+        document.body.appendChild(dot);
+        setTimeout(() => dot.remove(), 1300);
+      }
+    }
+
+    // ── Intro screen ─────────────────────────────────────────────────
+    function closeIntro(withMusic) {
+      if (withMusic) {
+        const btn = document.getElementById('btn-letsgo');
+        const r   = btn.getBoundingClientRect();
+        confettiBurst(r.left + r.width / 2, r.top + r.height / 2);
+        startMusic();
+      }
+      const intro = document.getElementById('intro');
+      intro.classList.add('closing');
+      setTimeout(() => { intro.style.display = 'none'; }, 450);
+    }
+
+    // ── Floating hearts from tap badge ───────────────────────────────
+    function spawnHearts(el) {
+      const r = el.getBoundingClientRect();
+      const cx = r.left + r.width / 2;
+      const cy = r.top  + r.height / 2;
+      ['❤️','🌸','💕','✨'].forEach((emoji, i) => {
+        const h = document.createElement('div');
+        h.className = 'float-heart';
+        h.textContent = emoji;
+        h.style.cssText = `
+          left:${cx + (Math.random() - 0.5) * 40}px;
+          top:${cy}px;
+          animation-delay:${i * 0.12}s;
+        `;
+        document.body.appendChild(h);
+        setTimeout(() => h.remove(), 2200);
+      });
+    }
+
+    // ── Ripple effect ────────────────────────────────────────────────
+    function ripple(e, el) {
+      const rect = el.getBoundingClientRect();
+      const ink  = document.createElement('span');
+      ink.className = 'ripple-ink';
+      const size = Math.max(rect.width, rect.height);
+      ink.style.cssText = `
+        width:${size}px; height:${size}px;
+        left:${e.clientX - rect.left - size/2}px;
+        top:${e.clientY - rect.top  - size/2}px;
+      `;
+      el.style.position = 'relative';
+      el.appendChild(ink);
+      setTimeout(() => ink.remove(), 600);
+    }
+
+    // Add ripple to all info cards
+    document.querySelectorAll('.info-card').forEach(card => {
+      card.addEventListener('click', e => ripple(e, card));
+    });
+
+    // ── Download flash ───────────────────────────────────────────────
+    function downloadFlash(el) {
+      el.classList.add('success');
+      const icon = el.querySelector('i');
+      if (icon) {
+        icon.setAttribute('data-lucide', 'check');
+        lucide.createIcons({ nodes: [icon] });
+        setTimeout(() => {
+          icon.setAttribute('data-lucide', 'download');
+          lucide.createIcons({ nodes: [icon] });
+          el.classList.remove('success');
+        }, 1400);
+      }
+    }
+
+    // ── Countdown with flip-scale ────────────────────────────────────
+    const WEDDING = new Date('2026-05-20T00:00:00+05:30');
+    function pad(n) { return String(Math.max(0, n)).padStart(2, '0'); }
+
+    function flipTo(id, newVal) {
+      const el = document.getElementById(id);
+      if (el.textContent === newVal) return;
+      el.classList.add('flipping');
+      setTimeout(() => {
+        el.textContent = newVal;
+        el.classList.remove('flipping');
+      }, 180);
+    }
+
+    function updateCountdown() {
+      const diff = WEDDING - Date.now();
+      if (diff <= 0) {
+        ['cd-days','cd-hours','cd-mins'].forEach(id => flipTo(id, '00'));
+        return;
+      }
+      flipTo('cd-days',  pad(Math.floor(diff / 86400000)));
+      flipTo('cd-hours', pad(Math.floor((diff % 86400000) / 3600000)));
+      flipTo('cd-mins',  pad(Math.floor((diff % 3600000)  / 60000)));
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    // ── Live Weather — Feroke, Kerala ────────────────────────────────
+    const WMO = {
+      0:'Clear sky',    1:'Mainly clear', 2:'Partly cloudy', 3:'Overcast',
+      45:'Foggy',       48:'Icy fog',
+      51:'Light drizzle',53:'Drizzle',   55:'Heavy drizzle',
+      61:'Light rain',  63:'Rain',       65:'Heavy rain',
+      80:'Rain showers',81:'Showers',    82:'Heavy showers',
+      95:'Thunderstorm',96:'Thunderstorm',99:'Thunderstorm'
+    };
+
+    async function fetchWeather() {
+      try {
+        const r = await fetch(
+          'https://api.open-meteo.com/v1/forecast' +
+          '?latitude=11.1821&longitude=75.7979' +
+          '&current=temperature_2m,weather_code,relative_humidity_2m' +
+          '&timezone=Asia%2FKolkata'
+        );
+        const d = await r.json();
+        const { temperature_2m: t, weather_code: c, relative_humidity_2m: h } = d.current;
+
+        // Animate values in
+        const tempEl = document.getElementById('weather-temp');
+        const condEl = document.getElementById('weather-condition');
+        const humEl  = document.getElementById('weather-humidity');
+
+        tempEl.classList.add('weather-animate');
+        condEl.classList.add('weather-animate');
+
+        tempEl.textContent = Math.round(t);
+        condEl.textContent = WMO[c] || 'Cloudy';
+        humEl.textContent  = `Humidity ${h}%`;
+
+        if (c > 1) document.getElementById('weather-sun').style.display = 'none';
+        const bg = c <= 1 ? '#0089cb' : c <= 3 ? '#4a90b8' : c <= 48 ? '#6b7280' : '#3d6b8a';
+        document.getElementById('weather-widget').style.background = bg;
+      } catch(e) {
+        document.getElementById('weather-condition').textContent = 'Feroke, Kerala';
+      }
+    }
+    fetchWeather();
+
+    // ── Download sheet ───────────────────────────────────────────────
+    function openSheet() {
+      document.getElementById('overlay').classList.add('active');
+      document.getElementById('bottomSheet').classList.add('active');
+    }
+    function closeSheet() {
+      document.getElementById('overlay').classList.remove('active');
+      document.getElementById('bottomSheet').classList.remove('active');
+    }
+    document.getElementById('bottomSheet').addEventListener('click', e => e.stopPropagation());
+
+  </script>
+</body>
+</html>
