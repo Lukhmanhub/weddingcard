@@ -8,11 +8,21 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://unpkg.com" crossorigin />
+  <script>
+    // Skip intro immediately if already seen — runs before paint to avoid flash
+    if (sessionStorage.getItem('introShown')) {
+      document.documentElement.classList.add('intro-seen');
+    }
+  </script>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="animations.css" />
   <style>
     /* ── Intro / Splash Screen ─────────────────────────────────────────── */
+    /* Instantly hide intro if already seen (class set before paint) */
+    .intro-seen #intro { display: none !important; }
+
     #intro {
       position: fixed;
       inset: 0;
@@ -341,8 +351,8 @@
               <span class="contact-name">Ramsheer EP</span>
               <span class="contact-role">Groom's brother-in-law</span>
             </div>
-            <span class="contact-number">+91 9876 543 210</span>
-            <a class="call-btn" href="tel:+919876543210" aria-label="Call Ramsheer EP" onclick="ripple(event,this)">
+            <span class="contact-number">+91 8606 805 836</span>
+            <a class="call-btn" href="tel:+918606805836" aria-label="Call Ramsheer EP" onclick="ripple(event,this)">
               <i data-lucide="phone" width="16" height="16"></i>
             </a>
           </div>
@@ -351,8 +361,8 @@
               <span class="contact-name">Abdul Razak P</span>
               <span class="contact-role">Groom's Father</span>
             </div>
-            <span class="contact-number">+91 9452 543 210</span>
-            <a class="call-btn" href="tel:+919452543210" aria-label="Call Abdul Razak P" onclick="ripple(event,this)">
+            <span class="contact-number">+91 9747 135 657</span>
+            <a class="call-btn" href="tel:+919747135657" aria-label="Call Abdul Razak P" onclick="ripple(event,this)">
               <i data-lucide="phone" width="16" height="16"></i>
             </a>
           </div>
@@ -361,8 +371,8 @@
               <span class="contact-name">Lukhman</span>
               <span class="contact-role">Groom's Brother</span>
             </div>
-            <span class="contact-number">+91 2133 543 210</span>
-            <a class="call-btn" href="tel:+912133543210" aria-label="Call Lukhman" onclick="ripple(event,this)">
+            <span class="contact-number">+91 9633 906 454</span>
+            <a class="call-btn" href="tel:+919633906454" aria-label="Call Lukhman" onclick="ripple(event,this)">
               <i data-lucide="phone" width="16" height="16"></i>
             </a>
           </div>
@@ -548,6 +558,7 @@
 
     // ── Intro screen ─────────────────────────────────────────────────
     function closeIntro(withMusic) {
+      sessionStorage.setItem('introShown', '1'); // never show again this session
       if (withMusic) {
         const btn = document.getElementById('btn-letsgo');
         const r   = btn.getBoundingClientRect();

@@ -777,3 +777,19 @@ body {
   .phone-wrapper { margin: 0 auto; }
   body { padding: 0; }
 }
+
+/* ===== Page Transitions (View Transitions API) ===== */
+@view-transition { navigation: auto; }
+
+::view-transition-old(root) {
+  animation: 260ms cubic-bezier(0.4, 0, 0.2, 1) both vt-exit;
+}
+::view-transition-new(root) {
+  animation: 300ms cubic-bezier(0.4, 0, 0.2, 1) both vt-enter;
+}
+@keyframes vt-exit {
+  to { opacity: 0; transform: translateY(6px) scale(0.99); }
+}
+@keyframes vt-enter {
+  from { opacity: 0; transform: translateY(8px) scale(0.99); }
+}
