@@ -33,7 +33,7 @@
 .tap-ring {
   position: absolute;
   inset: -8px;
-  border: 1.5px solid rgba(255, 73, 52, 0.45);
+  border: 1.5px solid rgba(184, 150, 46, 0.55);
   border-radius: 16px;
   pointer-events: none;
   animation: tap-ring-expand 2.4s ease-out infinite;
@@ -65,9 +65,9 @@
   animation: btn-glow-pulse 2.4s ease-in-out infinite;
 }
 @keyframes btn-glow-pulse {
-  0%, 100% { box-shadow: 0 6px 20px rgba(255, 73, 52, 0.45); }
-  50%       { box-shadow: 0 8px 44px rgba(255, 73, 52, 0.78),
-                          0 0  80px rgba(255, 73, 52, 0.25); }
+  0%, 100% { box-shadow: 0 6px 24px rgba(184, 150, 46, 0.55); }
+  50%       { box-shadow: 0 8px 48px rgba(212, 175, 55, 0.85),
+                          0 0  80px rgba(184, 150, 46, 0.3);  }
 }
 
 /* ── 5. Confetti burst on "Let's Go" ─────────────────────────────────── */
@@ -87,7 +87,7 @@
 .ripple-ink {
   position: absolute;
   border-radius: 50%;
-  background: rgba(255, 73, 52, 0.12);
+  background: rgba(184, 150, 46, 0.14);
   transform: scale(0);
   animation: ripple-expand 0.55s ease-out forwards;
   pointer-events: none;
