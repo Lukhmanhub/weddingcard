@@ -1,1061 +1,935 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mohammed & Henna — Wedding</title>
-  <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/gilroy-free" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="preconnect" href="https://unpkg.com" crossorigin />
-  <script>
-    // Skip intro immediately if already seen — runs before paint to avoid flash
-    if (sessionStorage.getItem('introShown')) {
-      document.documentElement.classList.add('intro-seen');
-    }
-  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1A1713">
+  <title>Mohammed &amp; Henna — Walima Reception</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="animations.css" />
+
   <style>
-    /* ── Intro / Splash Screen ─────────────────────────────────────────── */
-    .intro-seen #intro { display: none !important; }
+    /* ═══════════════════════════════════════════════════════
+       TOKENS — Luxury Minimal Dark
+    ═══════════════════════════════════════════════════════ */
+    :root {
+      --bg:        #1A1713;
+      --bg-card:   #201D19;
+      --bg-raised: #272320;
+      --gold:      #B8975A;
+      --gold-dim:  rgba(184,151,90,.35);
+      --gold-glow: rgba(184,151,90,.12);
+      --cream:     #FAF8F4;
+      --cream-mid: rgba(250,248,244,.72);
+      --cream-dim: rgba(250,248,244,.45);
+      --line:      rgba(184,151,90,.22);
+      --serif:     'Cormorant Garamond', Georgia, serif;
+      --sans:      'Jost', sans-serif;
+      --r:         14px;
+    }
 
-    #intro {
-      position: fixed;
-      inset: 0;
-      z-index: 999;
-      background: linear-gradient(160deg, #0C2518 0%, #1B4D3E 55%, #0E2D1F 100%);
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: var(--sans);
+      font-weight: 400;
+      background: var(--bg);
+      color: var(--cream);
+      min-height: 100dvh;
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
-      padding: 24px 20px;
-      animation: fadeIn 0.6s ease;
-      overflow: hidden;
+      overflow-x: hidden;
     }
 
-    /* Subtle shimmer overlay on intro */
-    #intro::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(184,150,46,0.14) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    @keyframes fadeIn  { from { opacity:0 } to { opacity:1 } }
-    @keyframes fadeOut { from { opacity:1 } to { opacity:0; pointer-events:none } }
-
-    #intro.closing { animation: fadeOut 0.45s ease forwards; }
-
-    #intro-close {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: rgba(184,150,46,0.15);
-      backdrop-filter: blur(6px);
-      border: 1px solid rgba(184,150,46,0.35);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      color: rgba(240,216,120,0.85);
-      transition: background 0.2s;
-      z-index: 1001;
-    }
-    #intro-close:hover { background: rgba(184,150,46,0.28); }
-
-    /* Bismillah above the card */
-    #intro-bismillah {
-      width: 180px;
-      height: auto;
-      margin-bottom: 18px;
-      opacity: 0.75;
-      filter: brightness(0) invert(1) sepia(1) saturate(0.4) brightness(1.3);
-      animation: content-rise 0.6s 0.1s ease both;
-    }
-
-    #intro-card {
-      animation: intro-card-in 0.7s cubic-bezier(.22,.68,0,1.22) 0.15s both;
-      max-width: 300px;
+    .wrap {
       width: 100%;
-      border-radius: 18px;
-      overflow: hidden;
-      box-shadow:
-        0 0 0 1.5px rgba(184,150,46,0.5),
-        0 0 0 4px rgba(184,150,46,0.12),
-        0 28px 72px rgba(0,0,0,0.55),
-        0 0 60px rgba(184,150,46,0.18);
+      max-width: 390px;
+      background: var(--bg);
+      position: relative;
+      overflow-x: hidden;
     }
-    #intro-card img {
-      width: 100%;
-      height: auto;
+
+    /* thin gold line between sections */
+    .divider {
+      height: .5px;
+      background: var(--line);
+      margin: 0;
+    }
+
+    /* section skeleton */
+    .sec { padding: 36px 20px; }
+
+    /* eyebrow label */
+    .eyebrow {
+      font-size: 9.5px;
+      font-weight: 500;
+      letter-spacing: 2.8px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
       display: block;
     }
 
-    #intro-cta {
-      margin-top: 28px;
+    /* ═══════════════════════════════════════════════════════
+       FALLING PETALS — pure CSS, 8 petals
+    ═══════════════════════════════════════════════════════ */
+    .petals {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 999; overflow: hidden;
+    }
+    .petal {
+      position: absolute; top: -20px;
+      width: 6px; height: 9px;
+      border-radius: 60% 0 60% 60%;
+      background: rgba(184,151,90,.2);
+      animation: petal-fall linear infinite;
+    }
+    .p1 { left:  7%; animation-duration:20s; animation-delay:  0s; --dr: 26px; }
+    .p2 { left: 17%; animation-duration:24s; animation-delay: -7s; --dr:-20px; }
+    .p3 { left: 29%; animation-duration:17s; animation-delay: -3s; --dr: 34px; }
+    .p4 { left: 43%; animation-duration:22s; animation-delay:-14s; --dr:-13px; }
+    .p5 { left: 56%; animation-duration:19s; animation-delay: -9s; --dr: 22px; }
+    .p6 { left: 68%; animation-duration:26s; animation-delay: -2s; --dr:-30px; }
+    .p7 { left: 80%; animation-duration:21s; animation-delay:-11s; --dr: 17px; }
+    .p8 { left: 91%; animation-duration:18s; animation-delay: -5s; --dr:-24px; }
+    @keyframes petal-fall {
+      0%   { transform:translateY(0)     translateX(0)          rotate(0deg);   opacity:0; }
+      8%   {                                                                      opacity:.2; }
+      92%  {                                                                      opacity:.12; }
+      100% { transform:translateY(110vh) translateX(var(--dr)) rotate(320deg); opacity:0; }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       SOUND BUTTON
+    ═══════════════════════════════════════════════════════ */
+    #sound-btn {
+      position: fixed; top: 18px; right: 18px;
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(26,23,19,.85);
+      border: 1px solid var(--gold-dim);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold); cursor: pointer; z-index: 98;
+      backdrop-filter: blur(10px);
+      opacity: 0; pointer-events: none;
+      transition: opacity .3s;
+    }
+    #sound-btn.visible { opacity: 1; pointer-events: auto; }
+    #sound-btn svg { width: 15px; height: 15px; }
+
+    /* ═══════════════════════════════════════════════════════
+       HERO
+    ═══════════════════════════════════════════════════════ */
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      background: var(--bg);
       display: flex;
       flex-direction: column;
-      align-items: center;
+      overflow: hidden;
+    }
+
+    /* couple illustration — upper portion */
+    .hero-img-wrap {
+      position: relative;
+      width: 100%;
+      height: 44vh;
+      min-height: 240px;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .hero-img-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center 20%;
+      display: block;
+    }
+    /* fade image into dark bg */
+    .hero-img-wrap::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 75%;
+      background: linear-gradient(to top, #1A1713 0%, rgba(26,23,19,.6) 55%, transparent 100%);
+    }
+
+    /* animated rings — float over the image area */
+    .hero-rings {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 44vh; min-height: 240px;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; pointer-events: none; z-index: 1;
+    }
+    .ring {
+      position: absolute; border-radius: 50%;
+    }
+    .ring-1 {
+      width: 180px; height: 180px;
+      border: 1px solid rgba(184,151,90,.14);
+      animation: ring-spin 28s linear infinite;
+    }
+    .ring-2 {
+      width: 270px; height: 270px;
+      border: .5px dashed rgba(184,151,90,.09);
+      animation: ring-spin 42s linear infinite reverse;
+    }
+    .ring-3 {
+      width: 370px; height: 370px;
+      border: .5px solid rgba(184,151,90,.06);
+      animation: ring-pulse 7s ease-in-out infinite;
+    }
+    .ring-4 {
+      width: 470px; height: 470px;
+      border: .5px solid rgba(184,151,90,.04);
+      animation: ring-pulse 7s ease-in-out infinite 2.5s;
+    }
+    @keyframes ring-spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    @keyframes ring-pulse {
+      0%,100% { opacity:.5; transform:scale(1); }
+      50%      { opacity:1;  transform:scale(1.025); }
+    }
+
+    /* hero text block — sits in the dark lower portion */
+    .hero-body {
+      position: relative; z-index: 2;
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 20px;
+      padding: 4px 26px 52px;
+      text-align: center;
+    }
+
+    /* Bismillah */
+    .bismillah { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+    .bsm-arabic {
+      font-family: var(--serif);
+      font-size: 21px; font-style: italic;
+      color: var(--gold); letter-spacing: .8px;
+    }
+    .bsm-roman {
+      font-size: 9px; font-weight: 300;
+      letter-spacing: 2.5px; text-transform: uppercase;
+      color: rgba(184,151,90,.65);
+    }
+
+    /* couple names */
+    .hero-names { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .hero-name  { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+    .h-first {
+      font-family: var(--serif);
+      font-size: 48px; font-style: italic; font-weight: 500;
+      color: var(--cream); line-height: 1; letter-spacing: -.5px;
+    }
+    .h-last {
+      font-size: 11px; font-weight: 300;
+      letter-spacing: 3.5px; text-transform: uppercase;
+      color: var(--cream-dim);
+    }
+    .name-sep {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .name-sep-line { width: 44px; height: .5px; background: var(--gold-dim); }
+    .name-sep-gem  { font-size: 9px; color: var(--gold); }
+
+    /* countdown headline */
+    .cd-label {
+      font-family: var(--serif);
+      font-size: 14px; font-style: italic;
+      color: var(--cream-dim); letter-spacing: .3px;
+    }
+
+    /* countdown cards row */
+    .cd-row {
+      display: flex; align-items: stretch; gap: 7px; width: 100%;
+    }
+    .cd-card {
+      flex: 1; min-width: 0;
+      background: rgba(32,29,25,.92);
+      border: 1.5px solid rgba(184,151,90,.38);
+      border-radius: 12px;
+      padding: 16px 4px 12px;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      position: relative; overflow: hidden;
+    }
+    /* top shimmer */
+    .cd-card::before {
+      content: '';
+      position: absolute; top: 0; left: 12%; right: 12%;
+      height: 1.5px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+      opacity: .55;
+    }
+    .cd-num {
+      font-family: var(--sans);
+      font-size: 34px; font-weight: 300;
+      color: var(--cream); line-height: 1; letter-spacing: -1px;
+      display: inline-block;
+      transition: transform .14s ease, opacity .14s ease;
+    }
+    .cd-num.flipping { transform: scaleY(.15); opacity: 0; }
+    .cd-unit {
+      font-size: 8.5px; font-weight: 500;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: var(--gold);
+    }
+    .cd-sep {
+      flex-shrink: 0; font-size: 8px;
+      color: rgba(184,151,90,.38); align-self: center;
+    }
+
+    /* card tick pulse */
+    @keyframes cd-tick {
+      0%   { transform:scale(1);    border-color:rgba(184,151,90,.38); }
+      38%  { transform:scale(1.06); border-color:rgba(184,151,90,.82); }
+      100% { transform:scale(1);    border-color:rgba(184,151,90,.38); }
+    }
+    .cd-card.tick { animation: cd-tick .4s cubic-bezier(.34,1.56,.64,1); }
+
+    /* date row */
+    .hero-date {
+      font-size: 12px; font-weight: 300;
+      letter-spacing: 1.2px; color: var(--cream-dim);
+    }
+    .hero-date strong { color: var(--cream-mid); font-weight: 400; }
+
+    /* scroll hint */
+    .hero-scroll {
+      position: absolute; bottom: 22px; left: 50%;
+      transform: translateX(-50%);
+      color: rgba(184,151,90,.3); z-index: 2;
+      animation: scroll-bob 2.6s ease-in-out infinite;
+    }
+    @keyframes scroll-bob {
+      0%,100% { transform:translateX(-50%) translateY(0);   opacity:.3; }
+      50%      { transform:translateX(-50%) translateY(6px); opacity:.6; }
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       COUPLE CARDS
+    ═══════════════════════════════════════════════════════ */
+    .couple-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
-
-    #btn-letsgo {
-      background: linear-gradient(135deg, #D4AF37 0%, #B8960C 100%);
-      color: #0C2518;
-      border: none;
-      border-radius: 50px;
-      padding: 14px 38px;
-      font-family: 'Gilroy', 'Plus Jakarta Sans', sans-serif;
-      font-size: 16px;
-      font-weight: 800;
-      letter-spacing: 0.3px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: 0 6px 24px rgba(184,150,46,0.55);
-      transition: transform 0.15s, box-shadow 0.15s;
+    .cp-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(184,151,90,.18);
+      border-radius: var(--r);
+      padding: 24px 12px 20px;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 12px; text-align: center;
     }
-    #btn-letsgo:active { transform: scale(0.96); box-shadow: 0 3px 12px rgba(184,150,46,0.3); }
-
-    #btn-skip {
-      background: none;
-      border: none;
-      color: rgba(240,216,120,0.45);
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 13px;
-      cursor: pointer;
-      padding: 4px 8px;
+    .monogram {
+      width: 62px; height: 62px; border-radius: 50%;
+      background: rgba(184,151,90,.1);
+      border: 1.5px solid rgba(184,151,90,.45);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--serif);
+      font-size: 28px; font-style: italic; font-weight: 500;
+      color: var(--gold);
     }
-    #btn-skip:hover { color: rgba(240,216,120,0.75); }
-
-    /* ── How-to-Reach slide-in panel ────────────────────────────────── */
-    .reach-panel {
-      position: fixed;
-      inset: 0;
-      z-index: 80;
-      background: var(--bg);
-      transform: translateX(100%);
-      transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      display: flex;
-      justify-content: center;
+    .cp-first {
+      font-family: var(--serif);
+      font-size: 22px; font-style: italic; font-weight: 500;
+      color: var(--cream); line-height: 1.15;
     }
-    .reach-panel.open { transform: translateX(0); }
-
-    /* back-btn hover */
-    .back-btn {
-      transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1),
-                  background 0.18s, box-shadow 0.18s;
+    .cp-last {
+      font-size: 10px; font-weight: 300;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: var(--cream-dim); margin-top: 2px;
     }
-    .back-btn:hover  { transform: translateX(-3px); background: var(--primary-light); }
-    .back-btn:active { transform: scale(0.92); }
-
-    /* header phone pulse ring */
-    .header-phone-btn { position: relative; }
-    .header-phone-btn::after {
-      content: '';
-      position: absolute; inset: 0;
-      border-radius: 50%;
-      border: 2px solid rgba(255,73,52,0.3);
-      pointer-events: none;
-      animation: call-ring 2.8s ease-out infinite;
-    }
-    @keyframes call-ring {
-      0%   { transform: scale(1);   opacity: 0.8; }
-      100% { transform: scale(1.8); opacity: 0;   }
+    .cp-rel {
+      font-size: 11.5px; font-weight: 300;
+      color: rgba(184,151,90,.72); line-height: 1.35;
     }
 
-    /* reach section hover */
-    .reach-section { transition: transform 0.25s ease; }
-    .reach-section:hover { transform: translateX(4px); }
-    .reach-mode-icon {
-      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), background 0.2s;
+    /* ═══════════════════════════════════════════════════════
+       VENUE
+    ═══════════════════════════════════════════════════════ */
+    .venue-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(184,151,90,.22);
+      border-radius: var(--r);
+      padding: 26px 20px;
+      display: flex; flex-direction: column; gap: 14px;
+      position: relative; overflow: hidden;
     }
-    .reach-section:hover .reach-mode-icon {
-      transform: translateY(-4px) scale(1.1);
-      background: var(--primary-light);
+    .venue-card::before {
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 1.5px;
+      background: linear-gradient(to right, transparent, var(--gold) 40%, var(--gold) 60%, transparent);
+      opacity: .5;
     }
-    .reach-highlight { display: inline-block; transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1); }
-    .reach-section:hover .reach-highlight { transform: scale(1.06); }
+    .venue-sub {
+      font-size: 9.5px; font-weight: 500;
+      letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold);
+    }
+    .venue-name {
+      font-family: var(--serif);
+      font-size: 28px; font-weight: 500; font-style: italic;
+      color: var(--cream); line-height: 1.2;
+    }
+    .venue-addr {
+      font-size: 14px; font-weight: 300;
+      color: var(--cream-mid); line-height: 1.6;
+    }
+    .venue-time {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 400; color: var(--gold);
+    }
+    .venue-time svg { flex-shrink: 0; }
+    .btn-dir {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(184,151,90,.1);
+      border: 1px solid rgba(184,151,90,.38);
+      border-radius: 8px; padding: 12px 20px;
+      font-family: var(--sans); font-size: 13px; font-weight: 500;
+      letter-spacing: .4px; color: var(--gold);
+      text-decoration: none; width: fit-content;
+      transition: background .2s, transform .15s;
+    }
+    .btn-dir:active { transform: scale(.97); background: rgba(184,151,90,.2); }
+    .btn-dir svg { width: 14px; height: 14px; }
 
-    /* map link */
-    .reach-map-link {
-      display: flex; align-items: center; gap: 6px;
-      color: var(--primary); text-decoration: none;
-      font-size: 13px; font-weight: 600;
-      margin-top: 8px; padding: 8px 12px;
-      background: var(--primary-light); border-radius: 8px;
-      width: fit-content;
-      transition: background 0.18s, transform 0.18s;
+    /* ═══════════════════════════════════════════════════════
+       CONTACTS
+    ═══════════════════════════════════════════════════════ */
+    .contacts-list { display: flex; flex-direction: column; gap: 10px; }
+    .ct-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(184,151,90,.16);
+      border-radius: var(--r);
+      padding: 18px 18px;
+      display: flex; align-items: center; gap: 14px;
+      min-height: 80px;
     }
-    .reach-map-link:hover { background: rgba(255,73,52,0.18); transform: translateY(-1px); }
-    .reach-map-link svg { flex-shrink: 0; }
+    .ct-info { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+    .ct-name {
+      font-size: 20px; font-weight: 500;
+      color: var(--cream); letter-spacing: -.2px; line-height: 1.2;
+    }
+    .ct-role {
+      font-size: 13px; font-weight: 300; color: var(--cream-dim);
+    }
+    .ct-num {
+      font-size: 12.5px; font-weight: 300;
+      color: var(--gold); letter-spacing: .4px; margin-top: 2px;
+    }
+    .call-btn {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: rgba(184,151,90,.1);
+      border: 1.5px solid rgba(184,151,90,.38);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold); text-decoration: none; flex-shrink: 0;
+      transition: background .15s, transform .15s;
+    }
+    .call-btn:active { background: rgba(184,151,90,.24); transform: scale(.92); }
+    .call-btn svg { width: 20px; height: 20px; }
 
-    /* eta chips */
-    .reach-eta-row { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
-    .reach-chip {
+    /* ═══════════════════════════════════════════════════════
+       TRAVEL
+    ═══════════════════════════════════════════════════════ */
+    .travel-list { display: flex; flex-direction: column; gap: 10px; }
+    .tv-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(184,151,90,.16);
+      border-radius: var(--r);
+      padding: 18px 18px; display: flex; flex-direction: column; gap: 12px;
+    }
+    .tv-head { display: flex; align-items: center; gap: 12px; }
+    .tv-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: rgba(184,151,90,.09);
+      border: 1px solid rgba(184,151,90,.22);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold); flex-shrink: 0;
+    }
+    .tv-icon svg { width: 19px; height: 19px; }
+    .tv-title {
+      font-family: var(--serif);
+      font-size: 18px; font-style: italic; font-weight: 500;
+      color: var(--cream);
+    }
+    .tv-sub {
+      font-size: 12px; font-weight: 300;
+      color: var(--cream-dim); margin-top: 2px;
+    }
+    .chips { display: flex; gap: 7px; flex-wrap: wrap; }
+    .chip {
       display: inline-flex; align-items: center; gap: 5px;
-      background: var(--gray-light); border-radius: 20px;
-      padding: 5px 12px; font-size: 13px; font-weight: 600;
-      color: var(--black); letter-spacing: -0.3px;
+      background: rgba(184,151,90,.08);
+      border: .5px solid rgba(184,151,90,.22);
+      border-radius: 20px; padding: 4px 10px;
+      font-size: 12px; font-weight: 400; color: var(--cream-mid);
     }
-    .reach-chip svg { color: var(--primary); }
+    .chip svg { width: 10px; height: 10px; color: var(--gold); }
+    .tv-map {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 500; letter-spacing: .3px;
+      color: var(--gold); text-decoration: none;
+    }
+    .tv-map svg { width: 13px; height: 13px; }
 
-    /* ── Music consent toast ────────────────────────────────────────── */
+    /* ═══════════════════════════════════════════════════════
+       PHOTO GALLERY
+    ═══════════════════════════════════════════════════════ */
+    .gallery-btn {
+      display: flex; align-items: center; gap: 14px;
+      background: var(--bg-card);
+      border: 1px solid rgba(184,151,90,.26);
+      border-radius: var(--r);
+      padding: 20px 18px;
+      text-decoration: none; width: 100%;
+      transition: background .2s, transform .15s;
+    }
+    .gallery-btn:active { transform: scale(.98); background: var(--bg-raised); }
+    .gal-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      background: rgba(184,151,90,.1);
+      border: 1px solid rgba(184,151,90,.28);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold); flex-shrink: 0;
+    }
+    .gal-icon svg { width: 22px; height: 22px; }
+    .gal-text { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    .gal-title {
+      font-family: var(--serif);
+      font-size: 20px; font-style: italic; font-weight: 500;
+      color: var(--cream);
+    }
+    .gal-sub {
+      font-size: 12px; font-weight: 300; color: var(--cream-dim);
+    }
+    .gal-arrow { color: var(--gold-dim); flex-shrink: 0; }
+    .gal-arrow svg { width: 19px; height: 19px; }
+
+    /* ═══════════════════════════════════════════════════════
+       WEDDING CARD IMAGE
+    ═══════════════════════════════════════════════════════ */
+    .card-frame {
+      border-radius: 16px; overflow: hidden;
+      border: 1px solid rgba(184,151,90,.28);
+      box-shadow: 0 10px 48px rgba(0,0,0,.55);
+    }
+    .card-frame img { width: 100%; height: auto; display: block; }
+    .card-dl-row {
+      display: flex; justify-content: center; margin-top: 16px;
+    }
+    .btn-dl {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(184,151,90,.1);
+      border: 1px solid rgba(184,151,90,.32);
+      border-radius: 8px; padding: 11px 24px;
+      font-family: var(--sans);
+      font-size: 13px; font-weight: 400; color: var(--gold);
+      text-decoration: none; letter-spacing: .4px;
+      transition: background .2s, transform .15s;
+    }
+    .btn-dl:active { transform: scale(.97); }
+    .btn-dl svg { width: 15px; height: 15px; }
+
+    /* ═══════════════════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════════════════ */
+    .footer {
+      padding: 36px 20px 52px;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 10px; text-align: center;
+    }
+    .footer-monogram {
+      font-family: var(--serif);
+      font-size: 24px; font-style: italic; font-weight: 500;
+      color: var(--gold); letter-spacing: 4px;
+    }
+    .footer-body {
+      font-size: 13px; font-weight: 300;
+      color: var(--cream-dim); line-height: 1.75;
+    }
+    .footer-copy {
+      font-size: 11px; font-weight: 300;
+      color: rgba(250,248,244,.2); margin-top: 6px;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       MUSIC CONSENT TOAST
+    ═══════════════════════════════════════════════════════ */
     .music-toast {
-      position: fixed;
-      bottom: 80px;
-      left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      z-index: 190;
-      opacity: 0;
-      pointer-events: none;
-      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s;
-      width: calc(100% - 32px);
-      max-width: 400px;
-    }
-    .music-toast.show {
+      position: fixed; bottom: 20px; left: 50%;
       transform: translateX(-50%) translateY(0);
-      opacity: 1;
-      pointer-events: all;
-    }
-    .music-toast-inner {
-      background: rgba(12,37,24,0.97);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(184,150,46,0.4);
-      border-radius: 16px;
-      padding: 14px 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.35);
-    }
-    .music-toast-note {
-      color: #D4AF37;
-      font-size: 22px;
-      flex-shrink: 0;
-      animation: note-pulse 2s ease-in-out infinite;
-    }
-    @keyframes note-pulse {
-      0%,100% { opacity: 0.8; transform: scale(1); }
-      50%      { opacity: 1;   transform: scale(1.15); }
-    }
-    .music-toast-body { flex: 1; display: flex; flex-direction: column; gap: 2px; }
-    .music-toast-title {
-      font-family: 'Gilroy', 'Plus Jakarta Sans', sans-serif;
-      font-size: 13px; font-weight: 700; color: #F5EDD0;
-    }
-    .music-toast-desc {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 11px; color: rgba(240,216,120,0.6);
-    }
-    .music-toast-yes {
-      background: linear-gradient(135deg, #D4AF37, #B8960C);
-      color: #0C2518; border: none; border-radius: 9px;
-      padding: 8px 16px;
-      font-family: 'Gilroy', 'Plus Jakarta Sans', sans-serif;
-      font-size: 13px; font-weight: 800; cursor: pointer; flex-shrink: 0;
-      transition: opacity 0.2s;
-    }
-    .music-toast-yes:active { opacity: 0.8; }
-    .music-toast-no {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 8px; color: rgba(240,216,120,0.5);
-      padding: 7px 11px; font-size: 16px; cursor: pointer; flex-shrink: 0;
-    }
-
-    /* ── Sound Toggle (fixed, always visible when music loaded) ──────── */
-    #sound-btn {
-      position: fixed;
-      bottom: 24px;
-      right: 16px;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.92);
-      border: none;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.18);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
+      width: calc(100% - 28px); max-width: 360px;
+      background: #272320;
+      border: 1px solid rgba(184,151,90,.32);
+      border-radius: 14px; padding: 14px 16px;
+      display: flex; align-items: center; gap: 12px;
       z-index: 200;
-      color: #FF4934;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s, transform 0.15s;
-      backdrop-filter: blur(6px);
+      box-shadow: 0 8px 36px rgba(0,0,0,.7);
+      transition: transform .42s cubic-bezier(.34,1.56,.64,1), opacity .3s ease;
     }
-    #sound-btn.visible { opacity: 1; pointer-events: all; }
-    #sound-btn:active { transform: scale(0.92); }
-
-    /* Hidden YouTube fallback iframe (HTTP only) */
-    #yt-wrap {
-      position: fixed;
-      left: -2px; top: -2px;
-      width: 1px; height: 1px;
-      overflow: hidden;
-      pointer-events: none;
+    .music-toast.hidden {
+      transform: translateX(-50%) translateY(130px);
+      opacity: 0; pointer-events: none;
     }
+    .t-icon { color: var(--gold); flex-shrink: 0; }
+    .t-icon svg { width: 20px; height: 20px; }
+    .t-text { flex: 1; }
+    .t-title { font-size: 13px; font-weight: 500; color: var(--cream); }
+    .t-sub   { font-size: 11px; font-weight: 300; color: var(--cream-dim); margin-top: 1px; }
+    .t-btns  { display: flex; gap: 7px; flex-shrink: 0; }
+    .t-btn {
+      border: none; border-radius: 7px; padding: 8px 14px;
+      font-family: var(--sans); font-size: 12px; font-weight: 500; cursor: pointer;
+      transition: opacity .15s;
+    }
+    .t-btn.yes { background: var(--gold); color: #1A1713; }
+    .t-btn.no  { background: rgba(184,151,90,.1); color: var(--cream-dim); border: 1px solid rgba(184,151,90,.2); }
+    .t-btn:active { opacity: .7; }
   </style>
 </head>
 <body>
 
-  <!-- ══ Intro Splash Screen ══════════════════════════════════════════════ -->
-  <div id="intro">
-    <button id="intro-close" aria-label="Skip intro" onclick="closeIntro(false)">
-      <i data-lucide="x" width="20" height="20"></i>
-    </button>
-
-    <img id="intro-bismillah" src="assets/bismillah.png" alt="" />
-
-    <div id="intro-card">
-      <img
-        src="assets/wedding-card.png"
-        alt="Wedding invitation — Mohammed Abdul Razak & Henna Shireen"
-        loading="eager"
-      />
-    </div>
-
-    <div id="intro-cta">
-      <button id="btn-letsgo" onclick="closeIntro(true)">
-        Let's Go
-        <i data-lucide="arrow-right" width="18" height="18"></i>
-      </button>
-      <button id="btn-skip" onclick="closeIntro(false)">Skip</button>
-    </div>
+  <!-- ── Falling petals ───────────────────────────────────────── -->
+  <div class="petals" aria-hidden="true">
+    <div class="petal p1"></div><div class="petal p2"></div>
+    <div class="petal p3"></div><div class="petal p4"></div>
+    <div class="petal p5"></div><div class="petal p6"></div>
+    <div class="petal p7"></div><div class="petal p8"></div>
   </div>
 
-  <!-- ══ Music consent toast ════════════════════════════════════════════ -->
-  <div id="music-toast" class="music-toast" aria-live="polite">
-    <div class="music-toast-inner">
-      <span class="music-toast-note">♪</span>
-      <div class="music-toast-body">
-        <span class="music-toast-title">Play Nasheed?</span>
-        <span class="music-toast-desc">Soft Islamic music in background</span>
-      </div>
-      <button class="music-toast-yes" onclick="consentMusic(true)">Play</button>
-      <button class="music-toast-no" onclick="consentMusic(false)">✕</button>
-    </div>
-  </div>
-
-  <!-- ══ Sound button ═════════════════════════════════════════════════════ -->
-  <button id="sound-btn" aria-label="Toggle music" onclick="toggleMute()">
-    <i id="sound-icon" data-lucide="volume-2" width="20" height="20"></i>
+  <!-- ── Sound toggle ─────────────────────────────────────────── -->
+  <button id="sound-btn" aria-label="Toggle music">
+    <i data-lucide="music" width="15" height="15"></i>
   </button>
 
-  <!-- ══ HTML5 Audio (primary) ════════════════════════════════════════════ -->
-  <!-- Place your MP3 at assets/background-music.mp3 to enable music -->
-  <audio id="bg-music" loop preload="auto">
-    <source src="assets/background-music.mp3" type="audio/mpeg">
-  </audio>
+  <!-- ════════════════════════════════════════════════════════════
+       MAIN WRAPPER
+  ════════════════════════════════════════════════════════════ -->
+  <div class="wrap">
 
-  <!-- ══ YouTube iframe fallback (works on HTTP server, not file://) ══════ -->
-  <div id="yt-wrap"></div>
-
-  <!-- ══ Main Wedding Website ═════════════════════════════════════════════ -->
-  <div class="phone-wrapper">
-
-    <!-- Hero — Cinematic Full Screen -->
+    <!-- ══ HERO ═════════════════════════════════════════════════ -->
     <section class="hero">
-      <div class="hero-bg"></div>
-      <div class="hero-gradient"></div>
-      <div class="hero-geo-pattern"></div>
 
-      <!-- Bismillah + Greeting -->
-      <div class="hero-top">
-        <img src="assets/bismillah.png" class="hero-bism" alt="" />
-        <p class="hero-greeting">
-          Hey fam,
-          <span>Assalamu Alaykum</span>
+      <!-- Couple illustration (top, fades into dark) -->
+      <div class="hero-img-wrap">
+        <img src="assets/hero-couple.jpg" alt="Mohammed &amp; Henna" aria-hidden="true">
+      </div>
+
+      <!-- Animated ring decorations over image area -->
+      <div class="hero-rings" aria-hidden="true">
+        <div class="ring ring-1"></div>
+        <div class="ring ring-2"></div>
+        <div class="ring ring-3"></div>
+        <div class="ring ring-4"></div>
+      </div>
+
+      <!-- Content: bismillah + names + countdown -->
+      <div class="hero-body">
+
+        <div class="bismillah">
+          <span class="bsm-arabic">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</span>
+          <span class="bsm-roman">Bismillahir Rahmanir Raheem</span>
+        </div>
+
+        <div class="hero-names">
+          <div class="hero-name">
+            <span class="h-first">Mohammed</span>
+            <span class="h-last">Abdul Razak</span>
+          </div>
+          <div class="name-sep">
+            <div class="name-sep-line"></div>
+            <span class="name-sep-gem">✦</span>
+            <div class="name-sep-line"></div>
+          </div>
+          <div class="hero-name">
+            <span class="h-first">Henna</span>
+            <span class="h-last">Shireen</span>
+          </div>
+        </div>
+
+        <span class="cd-label">Until they say I Do 💍</span>
+
+        <div class="cd-row">
+          <div class="cd-card" id="ccard-days">
+            <span class="cd-num" id="cd-days">--</span>
+            <span class="cd-unit">Days</span>
+          </div>
+          <span class="cd-sep">✦</span>
+          <div class="cd-card" id="ccard-hours">
+            <span class="cd-num" id="cd-hours">--</span>
+            <span class="cd-unit">Hours</span>
+          </div>
+          <span class="cd-sep">✦</span>
+          <div class="cd-card" id="ccard-mins">
+            <span class="cd-num" id="cd-mins">--</span>
+            <span class="cd-unit">Min</span>
+          </div>
+          <span class="cd-sep">✦</span>
+          <div class="cd-card" id="ccard-secs">
+            <span class="cd-num" id="cd-secs">--</span>
+            <span class="cd-unit">Sec</span>
+          </div>
+        </div>
+
+        <p class="hero-date">
+          <strong>Wednesday, 20 May 2026</strong>&thinsp;·&thinsp;Walima Reception
         </p>
+
+      </div><!-- /.hero-body -->
+
+      <div class="hero-scroll" aria-hidden="true">
+        <i data-lucide="chevrons-down" width="20" height="20"></i>
       </div>
 
-      <!-- Couple Names (cinematic center) -->
-      <div class="hero-names-wrap">
-        <p class="hero-event-type">Walima Reception</p>
-        <h1 class="hero-cname" id="hcn-groom">Mohammed Abdul Razak</h1>
-        <div class="hero-sep">
-          <span class="hero-sep-line"></span>
-          <span class="hero-sep-gem">✦ ✦ ✦</span>
-          <span class="hero-sep-line"></span>
-        </div>
-        <h1 class="hero-cname" id="hcn-bride">Henna Shireen</h1>
-      </div>
+    </section><!-- /.hero -->
 
-      <!-- Date pill -->
-      <div class="hero-bottom">
-        <div class="hero-date-pill">
-          <i data-lucide="calendar-heart" width="15" height="15"></i>
-          <span class="hero-date-pill-main">Wednesday · 20th May 2026</span>
-          <span class="hero-date-pill-loc">· Ramanattukara</span>
-        </div>
-      </div>
+    <div class="divider"></div>
 
-      <!-- Scroll hint -->
-      <div class="hero-scroll-hint">
-        <i data-lucide="chevrons-down" width="22" height="22"></i>
-      </div>
-    </section>
-
-    <!-- ── Countdown Section ─────────────────────────────────────────── -->
-    <section class="countdown-section">
-      <p class="countdown-headline">Until they say I Do 💍</p>
-      <div class="countdown-cards">
-        <div class="countdown-card" id="ccard-days">
-          <span class="countdown-value" id="cd-days">--</span>
-          <span class="countdown-unit">Days</span>
+    <!-- ══ COUPLE ════════════════════════════════════════════════ -->
+    <section class="sec">
+      <span class="eyebrow">The Couple</span>
+      <div class="couple-grid">
+        <div class="cp-card">
+          <div class="monogram">M</div>
+          <div>
+            <div class="cp-first">Mohammed</div>
+            <div class="cp-last">Abdul Razak</div>
+          </div>
+          <span class="cp-rel">S/O Abdul Razak</span>
         </div>
-        <span class="countdown-sep">✦</span>
-        <div class="countdown-card" id="ccard-hours">
-          <span class="countdown-value" id="cd-hours">--</span>
-          <span class="countdown-unit">Hours</span>
-        </div>
-        <span class="countdown-sep">✦</span>
-        <div class="countdown-card" id="ccard-mins">
-          <span class="countdown-value" id="cd-mins">--</span>
-          <span class="countdown-unit">Min</span>
-        </div>
-        <span class="countdown-sep">✦</span>
-        <div class="countdown-card" id="ccard-secs">
-          <span class="countdown-value" id="cd-secs">--</span>
-          <span class="countdown-unit">Sec</span>
+        <div class="cp-card">
+          <div class="monogram">H</div>
+          <div>
+            <div class="cp-first">Henna</div>
+            <div class="cp-last">Shireen</div>
+          </div>
+          <span class="cp-rel">D/O Mohammed Kallil</span>
         </div>
       </div>
     </section>
 
-    <!-- Ornament -->
-    <div class="ornament-divider">
-      <img src="assets/divider.png" alt="" />
-    </div>
+    <div class="divider"></div>
 
-    <!-- Main Content -->
-    <main class="main-content">
-
-      <!-- Couple Names -->
-      <div class="couple-row">
-        <div class="couple-card">
-          <div class="couple-name-block">
-            <span class="couple-firstname" data-i18n="groom-first">Mohammed</span>
-            <span class="couple-lastname" data-i18n="groom-last">Abdul Razak</span>
-          </div>
-          <span class="couple-relation" data-i18n="groom-rel">S/O Abdul Razak</span>
+    <!-- ══ VENUE ═════════════════════════════════════════════════ -->
+    <section class="sec">
+      <span class="eyebrow">Venue</span>
+      <div class="venue-card">
+        <span class="venue-sub">Walima Reception</span>
+        <h2 class="venue-name">Malabar Avenue Auditorium</h2>
+        <p class="venue-addr">Ramanattukara, Kozhikode<br>Kerala, India</p>
+        <div class="venue-time">
+          <i data-lucide="clock" width="14" height="14"></i>
+          <span>5:30 PM – 8:30 PM&ensp;·&ensp;Wed, 20 May 2026</span>
         </div>
-
-        <button class="tap-badge" onclick="openSheet(); spawnHearts(this)" aria-label="Download wedding assets">
-          <div class="tap-ring"></div>
-          <div class="tap-ring"></div>
-          <span class="tap-badge-label" data-i18n="tap-label">Tap here</span>
-          <i data-lucide="scan-heart" width="22" height="22"></i>
-        </button>
-
-        <div class="couple-card" style="align-items: flex-end; text-align: right;">
-          <div class="couple-name-block" style="align-items: flex-end;">
-            <span class="couple-firstname" data-i18n="bride-first">Henna</span>
-            <span class="couple-lastname" data-i18n="bride-last">Shireen</span>
-          </div>
-          <span class="couple-relation" data-i18n="bride-rel">D/O Mohammed Kallil</span>
-        </div>
-      </div>
-
-      <!-- Info Grid -->
-      <div class="info-grid">
-
-        <!-- Location -->
-        <a class="info-card" href="https://maps.google.com/?q=Malabar+Avenue+Auditorium" target="_blank" rel="noopener">
-          <div class="info-card-top">
-            <div class="info-card-icon">
-              <i data-lucide="map-pin" width="22" height="22"></i>
-            </div>
-            <div class="info-card-text">
-              <span class="info-card-title" data-i18n="venue-title">Malabar Avenue</span>
-              <span class="info-card-subtitle" data-i18n="venue-sub">Auditorium</span>
-            </div>
-          </div>
-          <div class="info-card-bottom">
-            <span class="info-card-link" data-i18n="venue-link">Google map</span>
-            <div class="info-card-link-icon">
-              <i data-lucide="external-link" width="18" height="18"></i>
-            </div>
-          </div>
+        <a class="btn-dir"
+           href="https://maps.google.com/?q=Malabar+Avenue+Auditorium+Ramanattukara"
+           target="_blank" rel="noopener">
+          <i data-lucide="navigation" width="14" height="14"></i>
+          Get Directions
         </a>
+      </div>
+    </section>
 
-        <!-- How to Reach -->
-        <a class="info-card" href="#" onclick="openReach(); return false;">
-          <div class="info-card-top">
-            <div class="info-card-icon">
-              <i data-lucide="luggage" width="22" height="22"></i>
-            </div>
-            <div class="info-card-text">
-              <span class="info-card-title" data-i18n="reach-title">How to reach</span>
-              <span class="info-card-subtitle" data-i18n="reach-sub">Auditorium</span>
-            </div>
-          </div>
-          <div class="info-card-bottom">
-            <span class="info-card-link" data-i18n="reach-link">From</span>
-            <div class="transport-icons">
-              <i data-lucide="bus" width="18" height="18"></i>
-              <i data-lucide="train-front" width="18" height="18"></i>
-              <i data-lucide="plane" width="18" height="18"></i>
-            </div>
-          </div>
-        </a>
+    <div class="divider"></div>
 
-        <!-- Save the Date -->
-        <button class="info-card" onclick="openSheet()" style="text-align:left;border:none;background:white;cursor:pointer;">
-          <div class="info-card-top">
-            <div class="info-card-icon">
-              <i data-lucide="smartphone" width="22" height="22"></i>
-            </div>
-            <div class="info-card-text">
-              <span class="info-card-title" data-i18n="save-title">Save the date</span>
-              <span class="info-card-subtitle" data-i18n="save-sub">Video</span>
-            </div>
-          </div>
-          <div class="info-card-bottom">
-            <span class="info-card-link" data-i18n="save-link">Wedding card and video</span>
-          </div>
-        </button>
+    <!-- ══ CONTACTS ══════════════════════════════════════════════ -->
+    <section class="sec">
+      <span class="eyebrow">For Enquiry</span>
+      <div class="contacts-list">
 
-        <!-- Photo Gallery -->
-        <a class="info-card" href="https://kwikpic-in.app.link/oZqFRWqkk2b?groupCode=NUOSAZ" target="_blank" rel="noopener">
-          <div class="info-card-top">
-            <div class="info-card-icon">
-              <i data-lucide="camera" width="22" height="22"></i>
-            </div>
-            <div class="info-card-text">
-              <span class="info-card-title" data-i18n="gallery-title">Photo Gallery</span>
-              <span class="info-card-subtitle" data-i18n="gallery-sub">via Kwikpic</span>
-            </div>
+        <div class="ct-card">
+          <div class="ct-info">
+            <span class="ct-name">Ramsheer EP</span>
+            <span class="ct-role">Groom's Brother-in-law</span>
+            <span class="ct-num">+91 8606 805 836</span>
           </div>
-          <div class="info-card-bottom">
-            <span class="info-card-link" data-i18n="gallery-link">Get your photos</span>
-            <div class="info-card-link-icon">
-              <i data-lucide="external-link" width="18" height="18"></i>
-            </div>
+          <a class="call-btn" href="tel:+918606805836" aria-label="Call Ramsheer EP">
+            <i data-lucide="phone" width="20" height="20"></i>
+          </a>
+        </div>
+
+        <div class="ct-card">
+          <div class="ct-info">
+            <span class="ct-name">Abdul Razak P</span>
+            <span class="ct-role">Groom's Father</span>
+            <span class="ct-num">+91 9747 135 657</span>
           </div>
-        </a>
+          <a class="call-btn" href="tel:+919747135657" aria-label="Call Abdul Razak P">
+            <i data-lucide="phone" width="20" height="20"></i>
+          </a>
+        </div>
+
+        <div class="ct-card">
+          <div class="ct-info">
+            <span class="ct-name">Lukhman</span>
+            <span class="ct-role">Groom's Brother</span>
+            <span class="ct-num">+91 9633 906 454</span>
+          </div>
+          <a class="call-btn" href="tel:+919633906454" aria-label="Call Lukhman">
+            <i data-lucide="phone" width="20" height="20"></i>
+          </a>
+        </div>
 
       </div>
+    </section>
 
-      <!-- Contacts -->
-      <div class="contacts-section">
-        <div class="section-header">
-          <div class="section-header-icon">
-            <i data-lucide="phone-call" width="22" height="22"></i>
+    <div class="divider"></div>
+
+    <!-- ══ HOW TO REACH ══════════════════════════════════════════ -->
+    <section class="sec">
+      <span class="eyebrow">How to Reach</span>
+      <div class="travel-list">
+
+        <!-- By Air -->
+        <div class="tv-card">
+          <div class="tv-head">
+            <div class="tv-icon"><i data-lucide="plane" width="19" height="19"></i></div>
+            <div>
+              <div class="tv-title">By Air</div>
+              <div class="tv-sub">Calicut International Airport (CCJ)</div>
+            </div>
           </div>
-          <div class="section-header-text">
-            <span class="section-header-title" data-i18n="contact-header">Call for enquiry</span>
-            <span class="section-header-subtitle" data-i18n="contact-sub">Family numbers</span>
+          <div class="chips">
+            <span class="chip"><i data-lucide="map-pin" width="10" height="10"></i>14.3 km</span>
+            <span class="chip"><i data-lucide="clock" width="10" height="10"></i>~30 min</span>
           </div>
+          <a class="tv-map" href="https://maps.google.com/?q=Calicut+International+Airport" target="_blank" rel="noopener">
+            <i data-lucide="map" width="13" height="13"></i>Open in Maps
+          </a>
         </div>
-        <div class="contacts-list">
-          <div class="contact-row">
-            <div class="contact-info">
-              <span class="contact-name" data-i18n="name-ramsheer">Ramsheer EP</span>
-              <span class="contact-role" data-i18n="role-ramsheer">Groom's brother-in-law</span>
+
+        <!-- By Train -->
+        <div class="tv-card">
+          <div class="tv-head">
+            <div class="tv-icon"><i data-lucide="train-front" width="19" height="19"></i></div>
+            <div>
+              <div class="tv-title">By Train</div>
+              <div class="tv-sub">Feroke Railway Station</div>
             </div>
-            <span class="contact-number">+91 8606 805 836</span>
-            <a class="call-btn" href="tel:+918606805836" aria-label="Call Ramsheer EP" onclick="ripple(event,this)">
-              <i data-lucide="phone" width="16" height="16"></i>
-            </a>
           </div>
-          <div class="contact-row">
-            <div class="contact-info">
-              <span class="contact-name" data-i18n="name-razak">Abdul Razak P</span>
-              <span class="contact-role" data-i18n="role-razak">Groom's Father</span>
-            </div>
-            <span class="contact-number">+91 9747 135 657</span>
-            <a class="call-btn" href="tel:+919747135657" aria-label="Call Abdul Razak P" onclick="ripple(event,this)">
-              <i data-lucide="phone" width="16" height="16"></i>
-            </a>
+          <div class="chips">
+            <span class="chip"><i data-lucide="map-pin" width="10" height="10"></i>4.4 km</span>
+            <span class="chip"><i data-lucide="clock" width="10" height="10"></i>~10 min</span>
           </div>
-          <div class="contact-row">
-            <div class="contact-info">
-              <span class="contact-name" data-i18n="name-lukhman">Lukhman</span>
-              <span class="contact-role" data-i18n="role-lukhman">Groom's Brother</span>
-            </div>
-            <span class="contact-number">+91 9633 906 454</span>
-            <a class="call-btn" href="tel:+919633906454" aria-label="Call Lukhman" onclick="ripple(event,this)">
-              <i data-lucide="phone" width="16" height="16"></i>
-            </a>
-          </div>
+          <a class="tv-map" href="https://maps.google.com/?q=Feroke+Railway+Station" target="_blank" rel="noopener">
+            <i data-lucide="map" width="13" height="13"></i>Open in Maps
+          </a>
         </div>
+
+        <!-- By Bus -->
+        <div class="tv-card">
+          <div class="tv-head">
+            <div class="tv-icon"><i data-lucide="bus" width="19" height="19"></i></div>
+            <div>
+              <div class="tv-title">By Bus</div>
+              <div class="tv-sub">Ramanattukara Bus Stand</div>
+            </div>
+          </div>
+          <div class="chips">
+            <span class="chip"><i data-lucide="map-pin" width="10" height="10"></i>1.5 km</span>
+            <span class="chip"><i data-lucide="clock" width="10" height="10"></i>~4 min</span>
+          </div>
+          <a class="tv-map" href="https://maps.google.com/?q=Ramanattukara+Bus+Stand" target="_blank" rel="noopener">
+            <i data-lucide="map" width="13" height="13"></i>Open in Maps
+          </a>
+        </div>
+
       </div>
+    </section>
 
-      <!-- Weather Widget -->
-      <div class="weather-widget" id="weather-widget">
-        <div class="weather-bg"></div>
-        <div class="weather-sun" id="weather-sun"></div>
-        <span class="weather-label" data-i18n="weather-label">Weather on Wedding area</span>
-        <div class="weather-temp-row">
-          <div class="weather-temp"><span id="weather-temp">--</span><sup>°C</sup></div>
-          <div class="weather-meta">
-            <span class="weather-condition" id="weather-condition">Feroke, Kerala</span>
-            <span class="weather-humidity" id="weather-humidity"></span>
-          </div>
+    <div class="divider"></div>
+
+    <!-- ══ PHOTO GALLERY ═════════════════════════════════════════ -->
+    <section class="sec">
+      <span class="eyebrow">Memories</span>
+      <a class="gallery-btn"
+         href="https://kwikpic-in.app.link/oZqFRWqkk2b?groupCode=NUOSAZ"
+         target="_blank" rel="noopener">
+        <div class="gal-icon"><i data-lucide="camera" width="22" height="22"></i></div>
+        <div class="gal-text">
+          <span class="gal-title">Photo Gallery</span>
+          <span class="gal-sub">View &amp; download your photos via Kwikpic</span>
         </div>
+        <div class="gal-arrow"><i data-lucide="arrow-right" width="19" height="19"></i></div>
+      </a>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ══ WEDDING CARD ══════════════════════════════════════════ -->
+    <section class="sec">
+      <span class="eyebrow">Wedding Card</span>
+      <div class="card-frame">
+        <img src="assets/wedding-card.png" alt="Mohammed &amp; Henna Wedding Invitation" loading="lazy">
       </div>
-
-    </main>
-  </div>
-
-  <!-- ══ Download Bottom Sheet ════════════════════════════════════════════ -->
-  <div class="sheet-overlay" id="overlay" onclick="closeSheet()"></div>
-  <div class="bottom-sheet" id="bottomSheet">
-    <div class="sheet-handle"></div>
-    <h2 class="sheet-title">Download the wedding asset</h2>
-    <div class="download-list">
-      <div class="download-row">
-        <span class="download-name">Wedding card</span>
-        <a class="download-btn"
+      <div class="card-dl-row">
+        <a class="btn-dl"
            href="assets/wedding-card.png"
-           download="Mohammed_Henna_Wedding_Card.png"
-           aria-label="Download wedding card"
-           onclick="downloadFlash(this)">
-          <i data-lucide="download" width="18" height="18"></i>
+           download="Mohammed_Henna_Wedding_Card.png">
+          <i data-lucide="download" width="15" height="15"></i>
+          Save Card
         </a>
       </div>
-      <div class="download-row">
-        <span class="download-name">Save the date video</span>
-        <a class="download-btn" href="#" download aria-label="Download save the date video"
-           onclick="downloadFlash(this)">
-          <i data-lucide="download" width="18" height="18"></i>
-        </a>
-      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ══ FOOTER ════════════════════════════════════════════════ -->
+    <footer class="footer">
+      <div class="footer-monogram">M ✦ H</div>
+      <p class="footer-body">
+        Mohammed Abdul Razak &amp; Henna Shireen<br>
+        Walima Reception · 20 May 2026<br>
+        Malabar Avenue Auditorium, Kozhikode
+      </p>
+      <p class="footer-copy">With love &amp; duas ♥</p>
+    </footer>
+
+  </div><!-- /.wrap -->
+
+  <!-- ── Music consent toast ──────────────────────────────────── -->
+  <div id="music-toast" class="music-toast hidden" role="dialog" aria-label="Music consent">
+    <div class="t-icon"><i data-lucide="music-2" width="20" height="20"></i></div>
+    <div class="t-text">
+      <div class="t-title">Play soft nasheeds?</div>
+      <div class="t-sub">Background music while you browse</div>
+    </div>
+    <div class="t-btns">
+      <button class="t-btn yes" onclick="consentMusic(true)">Play</button>
+      <button class="t-btn no"  onclick="consentMusic(false)">✕</button>
     </div>
   </div>
 
-  <!-- ══ How-to-Reach Panel ══════════════════════════════════════════════ -->
-  <div id="reach-panel" class="reach-panel" aria-hidden="true">
-    <div class="phone-wrapper">
-
-      <header class="page-header">
-        <button class="back-btn" onclick="closeReach()" aria-label="Go back">
-          <i data-lucide="arrow-left" width="22" height="22"></i>
-        </button>
-        <h1 class="page-title">How to reach</h1>
-        <a class="header-phone-btn" href="tel:+918606805836" aria-label="Call for enquiry" onclick="ripple(event,this)">
-          <i data-lucide="phone" width="22" height="22"></i>
-        </a>
-      </header>
-
-      <div class="reach-content">
-        <div class="reach-card">
-
-          <!-- By Air -->
-          <div class="reach-section">
-            <div class="reach-mode">
-              <div class="reach-mode-icon">
-                <i data-lucide="plane" width="24" height="24"></i>
-              </div>
-              <div><span class="reach-mode-title">By Air</span></div>
-            </div>
-            <div class="reach-details">
-              <ul>
-                <li>Nearest airport: <span class="reach-highlight">Calicut International Airport (CCJ)</span></li>
-                <li>App-based taxi or local taxi recommended</li>
-              </ul>
-              <div class="reach-eta-row">
-                <span class="reach-chip"><i data-lucide="map-pin" width="13" height="13"></i><span class="reach-highlight">14.3 km</span></span>
-                <span class="reach-chip"><i data-lucide="clock" width="13" height="13"></i><span class="reach-highlight">~30 min</span></span>
-              </div>
-              <a class="reach-map-link" href="https://maps.google.com/?q=Calicut+International+Airport" target="_blank" rel="noopener">
-                <i data-lucide="map" width="14" height="14"></i> Open in Maps
-              </a>
-            </div>
-          </div>
-
-          <div class="reach-divider"></div>
-
-          <!-- By Train -->
-          <div class="reach-section">
-            <div class="reach-mode">
-              <div class="reach-mode-icon">
-                <i data-lucide="train-front" width="24" height="24"></i>
-              </div>
-              <div><span class="reach-mode-title">By Train</span></div>
-            </div>
-            <div class="reach-details">
-              <ul>
-                <li>Nearest station: <span class="reach-highlight">Feroke Railway Station</span></li>
-                <li>App-based taxi or local Auto-rickshaw recommended</li>
-              </ul>
-              <div class="reach-eta-row">
-                <span class="reach-chip"><i data-lucide="map-pin" width="13" height="13"></i><span class="reach-highlight">4.4 km</span></span>
-                <span class="reach-chip"><i data-lucide="clock" width="13" height="13"></i><span class="reach-highlight">~10 min</span></span>
-              </div>
-              <a class="reach-map-link" href="https://maps.google.com/?q=Feroke+Railway+Station" target="_blank" rel="noopener">
-                <i data-lucide="map" width="14" height="14"></i> Open in Maps
-              </a>
-            </div>
-          </div>
-
-          <div class="reach-divider"></div>
-
-          <!-- By Bus -->
-          <div class="reach-section">
-            <div class="reach-mode">
-              <div class="reach-mode-icon">
-                <i data-lucide="bus" width="24" height="24"></i>
-              </div>
-              <div><span class="reach-mode-title">By Bus</span></div>
-            </div>
-            <div class="reach-details">
-              <ul>
-                <li>Nearest bus stand: <span class="reach-highlight">Ramanattukara Bus Stand</span></li>
-                <li>App-based taxi or local Auto-rickshaw recommended</li>
-              </ul>
-              <div class="reach-eta-row">
-                <span class="reach-chip"><i data-lucide="map-pin" width="13" height="13"></i><span class="reach-highlight">1.5 km</span></span>
-                <span class="reach-chip"><i data-lucide="clock" width="13" height="13"></i><span class="reach-highlight">~4 min</span></span>
-              </div>
-              <a class="reach-map-link" href="https://maps.google.com/?q=Ramanattukara+Bus+Stand" target="_blank" rel="noopener">
-                <i data-lucide="map" width="14" height="14"></i> Open in Maps
-              </a>
-            </div>
-          </div>
-
-          <div class="reach-divider"></div>
-
-          <!-- Venue -->
-          <div class="reach-section">
-            <div class="reach-mode">
-              <div class="reach-mode-icon" style="background:rgba(255,73,52,0.1);">
-                <i data-lucide="map-pin" width="24" height="24"></i>
-              </div>
-              <div><span class="reach-mode-title">Venue</span></div>
-            </div>
-            <div class="reach-details">
-              <ul>
-                <li><span class="reach-highlight">Malabar Avenue Auditorium</span></li>
-                <li>Ramanattukara, Kozhikode, Kerala</li>
-                <li>Event: <span class="reach-highlight">5:30 PM – 8:30 PM (IST)</span></li>
-              </ul>
-              <a class="reach-map-link" href="https://maps.google.com/?q=Malabar+Avenue+Auditorium+Ramanattukara" target="_blank" rel="noopener">
-                <i data-lucide="navigation" width="14" height="14"></i> Get Directions
-              </a>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ══ Music Engine ══════════════════════════════════════════════════════ -->
-  <script>
-    var isMuted      = false;
-    var musicStarted = false;
-    var ytIframe     = null;
-    var bgAudio      = document.getElementById('bg-music');
-
-    /* ── helpers ── */
-    function showSoundBtn() {
-      document.getElementById('sound-btn').classList.add('visible');
-    }
-    function updateSoundIcon() {
-      var el = document.getElementById('sound-icon');
-      el.setAttribute('data-lucide', isMuted ? 'volume-x' : 'volume-2');
-      lucide.createIcons({ nodes: [el] });
-    }
-
-    /* ── silent autoplay attempt (runs on page load) ── */
-    function startMusic() {
-      if (musicStarted) return;
-      bgAudio.volume = 0.65;
-      bgAudio.play().then(function() {
-        musicStarted = true;
-        showSoundBtn();
-        updateSoundIcon();
-      }).catch(function() {
-        /* blocked by browser — will be retried on first user interaction */
-      });
-    }
-
-    /* ── play after first gesture (works when autoplay is blocked) ── */
-    function startMusicAfterGesture() {
-      if (musicStarted) return;
-      bgAudio.volume = 0.65;
-      bgAudio.play()
-        .then(function() {
-          musicStarted = true;
-          showSoundBtn();
-          updateSoundIcon();
-        })
-        .catch(function() {
-          // Last resort: YouTube iframe (HTTP/HTTPS only)
-          var iframe = document.createElement('iframe');
-          iframe.src = 'https://www.youtube.com/embed/MpEo6vDESzU'
-            + '?autoplay=1&controls=0&loop=1&playlist=MpEo6vDESzU'
-            + '&mute=0&fs=0&iv_load_policy=3&rel=0';
-          iframe.allow = 'autoplay; encrypted-media';
-          iframe.style.cssText = 'width:1px;height:1px;border:0;';
-          document.getElementById('yt-wrap').appendChild(iframe);
-          ytIframe = iframe;
-          musicStarted = true;
-          showSoundBtn();
-          updateSoundIcon();
-        });
-    }
-
-    /* ── try immediately, then hook first interaction as fallback ── */
-    startMusic();
-    document.addEventListener('touchstart', startMusicAfterGesture, { once: true });
-    document.addEventListener('click',      startMusicAfterGesture, { once: true });
-
-    /* ── mute / unmute ── */
-    function toggleMute() {
-      isMuted = !isMuted;
-      if (bgAudio) bgAudio.muted = isMuted;
-      if (ytIframe) {
-        var base = 'https://www.youtube.com/embed/MpEo6vDESzU'
-          + '?autoplay=1&controls=0&loop=1&playlist=MpEo6vDESzU&fs=0&iv_load_policy=3&rel=0';
-        ytIframe.src = base + (isMuted ? '&mute=1' : '&mute=0');
-      }
-      updateSoundIcon();
-    }
-  </script>
+  <audio id="bg-music" src="assets/background-music.mp3" loop preload="none"></audio>
 
   <script>
-    // ════════════════════════════════════════════════════════════════
-    //  ANIMATION ENGINE
-    // ════════════════════════════════════════════════════════════════
+    // ── Icons ──────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => lucide.createIcons());
 
-    // Init Lucide icons
-    lucide.createIcons();
+    // ── Countdown ─────────────────────────────────────────────
+    const WEDDING = new Date('2026-05-20T17:30:00+05:30');
 
-    // ── Falling petals on intro ──────────────────────────────────────
-    const PETAL_COLORS = [
-      'rgba(212,175,55,0.7)',
-      'rgba(240,216,120,0.6)',
-      'rgba(255,248,200,0.55)',
-      'rgba(184,150,46,0.5)',
-      'rgba(255,235,170,0.65)',
-    ];
-    const PETAL_RADII = [
-      '42% 58% 62% 38% / 48% 44% 56% 52%',
-      '60% 40% 38% 62% / 52% 60% 40% 48%',
-      '50% 50% 45% 55% / 55% 45% 55% 45%',
-    ];
-
-    function spawnPetals(container, count = 18) {
-      for (let i = 0; i < count; i++) {
-        const p = document.createElement('div');
-        p.className = 'petal';
-        const size = 6 + Math.random() * 10;
-        const drift = (Math.random() - 0.5) * 120;
-        const spin  = 360 + Math.floor(Math.random() * 720);
-        p.style.cssText = `
-          left:${Math.random() * 110 - 5}%;
-          top:-${size + 5}px;
-          width:${size}px;
-          height:${size * 1.3}px;
-          background:${PETAL_COLORS[Math.floor(Math.random() * PETAL_COLORS.length)]};
-          border-radius:${PETAL_RADII[Math.floor(Math.random() * PETAL_RADII.length)]};
-          --drift:${drift}px;
-          --spin:${spin}deg;
-          animation:petal-fall ${4 + Math.random() * 5}s linear forwards;
-          animation-delay:${Math.random() * 4}s;
-        `;
-        container.appendChild(p);
-        setTimeout(() => p.remove(), 10000);
-      }
-    }
-    if (!document.documentElement.classList.contains('intro-seen')) {
-      spawnPetals(document.getElementById('intro'));
-    }
-
-    // ── Stop tap-badge animation after 3 s (continuous pulse is distracting) ──
-    setTimeout(function() {
-      var badge = document.querySelector('.tap-badge');
-      var rings = document.querySelectorAll('.tap-ring');
-      if (badge) badge.style.animation = 'none';
-      rings.forEach(function(r) { r.style.animation = 'none'; r.style.opacity = '0'; });
-    }, 3000);
-
-    // ── Confetti burst on "Let's Go" ─────────────────────────────────
-    const CONFETTI_COLORS = ['#D4AF37','#F0D878','#B8960C','#1B4D3E','#2D6A4F','#FFFDE7'];
-    function confettiBurst(cx, cy) {
-      for (let i = 0; i < 28; i++) {
-        const dot = document.createElement('div');
-        dot.className = 'confetti-dot';
-        const angle = (i / 28) * Math.PI * 2;
-        const dist  = 80 + Math.random() * 120;
-        dot.style.cssText = `
-          left:${cx}px; top:${cy}px;
-          width:${5 + Math.random() * 6}px;
-          height:${5 + Math.random() * 6}px;
-          border-radius:${Math.random() > 0.5 ? '50%' : '2px'};
-          background:${CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)]};
-          --cx:${Math.cos(angle) * dist}px;
-          --cy:${Math.sin(angle) * dist}px;
-          animation: confetti-fly ${0.6 + Math.random() * 0.5}s ease-out forwards;
-        `;
-        document.body.appendChild(dot);
-        setTimeout(() => dot.remove(), 1300);
-      }
-    }
-
-    // ── Intro screen ─────────────────────────────────────────────────
-    function closeIntro(withMusic) {
-      sessionStorage.setItem('introShown', '1');
-      if (withMusic) {
-        const btn = document.getElementById('btn-letsgo');
-        const r   = btn.getBoundingClientRect();
-        confettiBurst(r.left + r.width / 2, r.top + r.height / 2);
-        sessionStorage.setItem('musicWanted', '1');
-        startMusicAfterGesture(); // Let's Go = explicit music consent
-      } else {
-        showMusicToast(); // Skip = ask separately
-      }
-      const intro = document.getElementById('intro');
-      intro.classList.add('closing');
-      setTimeout(() => { intro.style.display = 'none'; }, 450);
-    }
-
-    // ── Music consent toast ───────────────────────────────────────────
-    function showMusicToast() {
-      if (musicStarted || localStorage.getItem('musicDeclined') || sessionStorage.getItem('musicWanted')) return;
-      setTimeout(function() {
-        var toast = document.getElementById('music-toast');
-        if (toast) toast.classList.add('show');
-      }, 900);
-    }
-    function consentMusic(yes) {
-      document.getElementById('music-toast').classList.remove('show');
-      if (yes) {
-        sessionStorage.setItem('musicWanted', '1');
-        startMusicAfterGesture();
-      } else {
-        localStorage.setItem('musicDeclined', '1');
-      }
-    }
-    // Show toast on return visits (no intro shown)
-    if (document.documentElement.classList.contains('intro-seen')) {
-      showMusicToast();
-    }
-
-    // ── Letter-by-letter character reveal ────────────────────────────
-    function revealChars(el, startDelay, perCharDelay) {
-      if (!el) return;
-      const chars = [...el.textContent];
-      el.textContent = '';
-      chars.forEach(function(ch, i) {
-        const s = document.createElement('span');
-        s.className = 'char-reveal';
-        s.textContent = ch === ' ' ? '\u00A0' : ch;
-        s.style.animationDelay = (startDelay + i * perCharDelay) + 's';
-        el.appendChild(s);
-      });
-    }
-
-    // Hero names — fire on load
-    revealChars(document.getElementById('hcn-groom'), 0.8, 0.05);
-    revealChars(document.getElementById('hcn-bride'), 1.7, 0.06);
-
-    // Couple card names — fire when scrolled into view
-    const nameObserver = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
-        if (entry.isIntersecting) {
-          entry.target.querySelectorAll('.couple-firstname').forEach(function(el, i) {
-            revealChars(el, i * 0.35, 0.07);
-          });
-          nameObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.4 });
-    const coupleRow = document.querySelector('.couple-row');
-    if (coupleRow) nameObserver.observe(coupleRow);
-
-    // ── Floating hearts from tap badge ───────────────────────────────
-    function spawnHearts(el) {
-      const r = el.getBoundingClientRect();
-      const cx = r.left + r.width / 2;
-      const cy = r.top  + r.height / 2;
-      ['❤️','🌸','💕','✨'].forEach((emoji, i) => {
-        const h = document.createElement('div');
-        h.className = 'float-heart';
-        h.textContent = emoji;
-        h.style.cssText = `
-          left:${cx + (Math.random() - 0.5) * 40}px;
-          top:${cy}px;
-          animation-delay:${i * 0.12}s;
-        `;
-        document.body.appendChild(h);
-        setTimeout(() => h.remove(), 2200);
-      });
-    }
-
-    // ── Ripple effect ────────────────────────────────────────────────
-    function ripple(e, el) {
-      const rect = el.getBoundingClientRect();
-      const ink  = document.createElement('span');
-      ink.className = 'ripple-ink';
-      const size = Math.max(rect.width, rect.height);
-      ink.style.cssText = `
-        width:${size}px; height:${size}px;
-        left:${e.clientX - rect.left - size/2}px;
-        top:${e.clientY - rect.top  - size/2}px;
-      `;
-      el.style.position = 'relative';
-      el.appendChild(ink);
-      setTimeout(() => ink.remove(), 600);
-    }
-
-    // Add ripple to all info cards
-    document.querySelectorAll('.info-card').forEach(card => {
-      card.addEventListener('click', e => ripple(e, card));
-    });
-
-    // ── Download flash ───────────────────────────────────────────────
-    function downloadFlash(el) {
-      el.classList.add('success');
-      const icon = el.querySelector('i');
-      if (icon) {
-        icon.setAttribute('data-lucide', 'check');
-        lucide.createIcons({ nodes: [icon] });
-        setTimeout(() => {
-          icon.setAttribute('data-lucide', 'download');
-          lucide.createIcons({ nodes: [icon] });
-          el.classList.remove('success');
-        }, 1400);
-      }
-    }
-
-    // ── Countdown with flip-scale ────────────────────────────────────
-    const WEDDING = new Date('2026-05-20T00:00:00+05:30');
     function pad(n) { return String(Math.max(0, n)).padStart(2, '0'); }
 
-    function flipTo(id, newVal) {
+    function flipTo(id, val) {
       const el = document.getElementById(id);
-      if (el.textContent === newVal) return;
+      if (!el || el.textContent === val) return;
       el.classList.add('flipping');
-      const card = el.closest('.countdown-card');
+      const card = el.closest('.cd-card');
       if (card) {
-        card.classList.remove('ticking');
-        void card.offsetWidth;
-        card.classList.add('ticking');
+        card.classList.remove('tick');
+        void card.offsetWidth;   // reflow to restart animation
+        card.classList.add('tick');
       }
-      setTimeout(() => {
-        el.textContent = newVal;
-        el.classList.remove('flipping');
-      }, 180);
+      setTimeout(() => { el.textContent = val; el.classList.remove('flipping'); }, 140);
     }
 
-    function updateCountdown() {
+    function tick() {
       const diff = WEDDING - Date.now();
       if (diff <= 0) {
         ['cd-days','cd-hours','cd-mins','cd-secs'].forEach(id => flipTo(id, '00'));
@@ -1066,76 +940,57 @@
       flipTo('cd-mins',  pad(Math.floor((diff % 3600000)  / 60000)));
       flipTo('cd-secs',  pad(Math.floor((diff % 60000)    / 1000)));
     }
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
+    tick();
+    setInterval(tick, 1000);
 
-    // ── Live Weather — Feroke, Kerala ────────────────────────────────
-    const WMO = {
-      0:'Clear sky',    1:'Mainly clear', 2:'Partly cloudy', 3:'Overcast',
-      45:'Foggy',       48:'Icy fog',
-      51:'Light drizzle',53:'Drizzle',   55:'Heavy drizzle',
-      61:'Light rain',  63:'Rain',       65:'Heavy rain',
-      80:'Rain showers',81:'Showers',    82:'Heavy showers',
-      95:'Thunderstorm',96:'Thunderstorm',99:'Thunderstorm'
-    };
+    // ── Music ──────────────────────────────────────────────────
+    const audio = document.getElementById('bg-music');
+    let musicOn = false;
 
-    async function fetchWeather() {
-      try {
-        const r = await fetch(
-          'https://api.open-meteo.com/v1/forecast' +
-          '?latitude=11.1821&longitude=75.7979' +
-          '&current=temperature_2m,weather_code,relative_humidity_2m' +
-          '&timezone=Asia%2FKolkata'
-        );
-        const d = await r.json();
-        const { temperature_2m: t, weather_code: c, relative_humidity_2m: h } = d.current;
-
-        // Animate values in
-        const tempEl = document.getElementById('weather-temp');
-        const condEl = document.getElementById('weather-condition');
-        const humEl  = document.getElementById('weather-humidity');
-
-        tempEl.classList.add('weather-animate');
-        condEl.classList.add('weather-animate');
-
-        tempEl.textContent = Math.round(t);
-        condEl.textContent = WMO[c] || 'Cloudy';
-        humEl.textContent  = `Humidity ${h}%`;
-
-        if (c > 1) document.getElementById('weather-sun').style.display = 'none';
-        const bg = c <= 1 ? '#0089cb' : c <= 3 ? '#4a90b8' : c <= 48 ? '#6b7280' : '#3d6b8a';
-        document.getElementById('weather-widget').style.background = bg;
-      } catch(e) {
-        document.getElementById('weather-condition').textContent = 'Feroke, Kerala';
-      }
-    }
-    fetchWeather();
-
-    // ── Download sheet ───────────────────────────────────────────────
-    function openSheet() {
-      document.getElementById('overlay').classList.add('active');
-      document.getElementById('bottomSheet').classList.add('active');
-    }
-    function closeSheet() {
-      document.getElementById('overlay').classList.remove('active');
-      document.getElementById('bottomSheet').classList.remove('active');
-    }
-    document.getElementById('bottomSheet').addEventListener('click', e => e.stopPropagation());
-
-    // ── How-to-Reach panel ───────────────────────────────────────────
-    function openReach() {
-      var panel = document.getElementById('reach-panel');
-      panel.classList.add('open');
-      panel.setAttribute('aria-hidden', 'false');
-      panel.scrollTop = 0;
-      lucide.createIcons({ nodes: Array.from(panel.querySelectorAll('[data-lucide]')) });
-    }
-    function closeReach() {
-      var panel = document.getElementById('reach-panel');
-      panel.classList.remove('open');
-      panel.setAttribute('aria-hidden', 'true');
+    function startMusic() {
+      if (musicOn) return;
+      audio.volume = 0.25;
+      audio.play().then(() => {
+        musicOn = true;
+        const btn = document.getElementById('sound-btn');
+        btn.classList.add('visible');
+        refreshSoundIcon();
+      }).catch(() => {});
     }
 
+    function refreshSoundIcon() {
+      const btn = document.getElementById('sound-btn');
+      btn.innerHTML = '';
+      const ic = document.createElement('i');
+      ic.setAttribute('data-lucide', audio.paused ? 'volume-x' : 'music');
+      ic.setAttribute('width', '15'); ic.setAttribute('height', '15');
+      btn.appendChild(ic);
+      lucide.createIcons();
+    }
+
+    document.getElementById('sound-btn').addEventListener('click', () => {
+      audio.paused ? audio.play().catch(() => {}) : audio.pause();
+      refreshSoundIcon();
+    });
+
+    function showToast() {
+      if (musicOn || localStorage.getItem('musicNo')) return;
+      if (sessionStorage.getItem('musicYes')) { startMusic(); return; }
+      setTimeout(() => document.getElementById('music-toast').classList.remove('hidden'), 1600);
+    }
+
+    function consentMusic(yes) {
+      document.getElementById('music-toast').classList.add('hidden');
+      if (yes) { sessionStorage.setItem('musicYes','1'); startMusic(); }
+      else     { localStorage.setItem('musicNo','1'); }
+    }
+
+    // Try autoplay immediately; fall back to toast
+    startMusic();
+    window.addEventListener('load', () => { if (!musicOn) showToast(); });
+    document.addEventListener('touchstart', () => {
+      if (!musicOn && sessionStorage.getItem('musicYes')) startMusic();
+    }, { once: true });
   </script>
 </body>
 </html>
