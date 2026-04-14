@@ -149,3 +149,14 @@
   from { transform: scale(0); opacity: 0; }
   to   { transform: scale(1); opacity: 1; }
 }
+
+/* ── 12. Letter-by-letter character reveal ───────────────────────────── */
+.char-reveal {
+  display: inline-block;
+  opacity: 0;
+  animation: char-fade 0.55s ease forwards;
+}
+@keyframes char-fade {
+  from { opacity: 0; transform: translateY(10px) scale(0.94); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}

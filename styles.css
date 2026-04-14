@@ -38,21 +38,25 @@ body {
   overflow-x: hidden;
 }
 
-/* ===== Hero Section ===== */
+/* ===== Hero Section — Full-Screen Cinematic ===== */
 .hero {
   position: relative;
   width: 100%;
-  height: 370px;
+  height: 100svh;
+  min-height: 580px;
   overflow: hidden;
   border-radius: 0 0 36px 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .hero-bg {
   position: absolute;
   inset: 0;
-  background-image: url('https://www.figma.com/api/mcp/asset/e64706f3-4bb9-4e24-aca1-1c6d299859c5');
+  background-image: url('assets/hero-couple.jpg');
   background-size: cover;
-  background-position: top center;
+  background-position: center 20%;
   background-repeat: no-repeat;
 }
 
@@ -61,49 +65,146 @@ body {
   inset: 0;
   background: linear-gradient(
     to bottom,
-    rgba(27, 77, 62, 0.08) 0%,
-    rgba(27, 77, 62, 0.35) 45%,
-    rgba(14, 45, 31, 0.92) 100%
+    rgba(14,45,31,0.52) 0%,
+    rgba(27,77,62,0.18) 28%,
+    rgba(27,77,62,0.42) 58%,
+    rgba(14,45,31,0.94) 100%
   );
 }
 
-.hero-content {
+/* Islamic 8-pointed star tile */
+.hero-geo-pattern {
   position: absolute;
-  bottom: 28px;
-  left: 20px;
-  right: 20px;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M40 12 L44.6 28.9 L59.8 20.2 L51.1 35.4 L68 40 L51.1 44.6 L59.8 59.8 L44.6 51.1 L40 68 L35.4 51.1 L20.2 59.8 L28.9 44.6 L12 40 L28.9 35.4 L20.2 20.2 L35.4 28.9 Z' stroke='%23B8962E' stroke-width='0.7' stroke-opacity='0.13' fill='none'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 80px 80px;
+  pointer-events: none;
+}
+
+/* ── Top: Bismillah + greeting ── */
+.hero-top {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: max(52px, env(safe-area-inset-top, 52px));
+  gap: 6px;
+}
+
+.hero-bism {
+  width: 148px;
+  height: auto;
+  opacity: 0.68;
+  filter: brightness(0) invert(1);
+  animation: content-rise 0.9s 0.2s ease both;
 }
 
 .hero-greeting {
-  font-family: 'Cormorant Garamond', 'Sora', serif;
-  font-weight: 600;
-  font-style: italic;
-  font-size: 36px;
-  color: #F5EDD0;
-  line-height: 1;
-  margin-bottom: 2px;
-  text-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: rgba(245,237,208,0.72);
+  text-align: center;
+  line-height: 1.5;
+  animation: content-rise 0.7s 0.5s ease both;
 }
 
 .hero-greeting span {
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-style: normal;
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 400;
   display: block;
-  margin-top: 4px;
-  line-height: 1.3;
-  color: rgba(245, 237, 208, 0.82);
+  color: rgba(240,216,120,0.55);
+  letter-spacing: 0.8px;
+}
+
+/* ── Center: Couple names ── */
+.hero-names-wrap {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  padding: 0 24px;
+}
+
+.hero-event-type {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(240,216,120,0.6);
+  animation: content-rise 0.7s 0.6s ease both;
+}
+
+.hero-cname {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: 40px;
+  color: #F5EDD0;
+  line-height: 1.05;
   letter-spacing: 0.3px;
+  text-shadow: 0 2px 28px rgba(0,0,0,0.45), 0 0 60px rgba(184,150,46,0.1);
+}
+
+.hero-sep {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 220px;
+  animation: content-rise 0.6s 1.2s ease both;
+  opacity: 0;
+  animation-fill-mode: both;
+}
+
+.hero-sep-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(184,150,46,0.7), transparent);
+}
+
+.hero-sep-gem {
+  color: #D4AF37;
+  font-size: 9px;
+  letter-spacing: 4px;
+}
+
+/* ── Bottom: Date + Countdown ── */
+.hero-bottom {
+  position: relative;
+  z-index: 2;
+  padding: 0 20px 32px;
+}
+
+/* Scroll hint chevron */
+.hero-scroll-hint {
+  position: absolute;
+  bottom: 110px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(240,216,120,0.35);
+  z-index: 2;
+  pointer-events: none;
+  animation: scroll-bounce 2.4s ease-in-out infinite;
+}
+@keyframes scroll-bounce {
+  0%,100% { transform: translateX(-50%) translateY(0);   opacity: 0.35; }
+  50%      { transform: translateX(-50%) translateY(7px); opacity: 0.78; }
 }
 
 .hero-date-bar {
-  margin-top: 14px;
-  background: rgba(27, 77, 62, 0.55);
+  background: rgba(27,77,62,0.55);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-radius: 14px;
-  border: 1px solid rgba(184, 150, 46, 0.38);
+  border: 1px solid rgba(184,150,46,0.38);
   padding: 10px 15px;
   display: flex;
   align-items: center;
@@ -120,7 +221,7 @@ body {
   font-family: 'Gilroy', 'Plus Jakarta Sans', sans-serif;
   font-size: 11px;
   font-weight: 500;
-  color: rgba(240, 216, 120, 0.85);
+  color: rgba(240,216,120,0.85);
   letter-spacing: 0.6px;
   text-transform: uppercase;
 }
@@ -137,7 +238,7 @@ body {
 .hero-divider {
   width: 1px;
   height: 44px;
-  background: rgba(184, 150, 46, 0.4);
+  background: rgba(184,150,46,0.4);
   margin: 0 12px;
 }
 
@@ -159,7 +260,7 @@ body {
   font-family: 'Gilroy', 'Plus Jakarta Sans', sans-serif;
   font-size: 10px;
   font-weight: 500;
-  color: rgba(240, 216, 120, 0.8);
+  color: rgba(240,216,120,0.8);
   letter-spacing: 0.3px;
   text-align: center;
 }
@@ -169,8 +270,8 @@ body {
   font-weight: 700;
   font-size: 15px;
   color: #F0D878;
-  background: rgba(184, 150, 46, 0.22);
-  border: 1px solid rgba(184, 150, 46, 0.4);
+  background: rgba(184,150,46,0.22);
+  border: 1px solid rgba(184,150,46,0.4);
   border-radius: 6px;
   padding: 5px 3px;
   width: 100%;

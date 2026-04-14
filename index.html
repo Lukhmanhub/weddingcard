@@ -210,6 +210,71 @@
     }
     .reach-chip svg { color: var(--primary); }
 
+    /* ── Music consent toast ────────────────────────────────────────── */
+    .music-toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      z-index: 190;
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s;
+      width: calc(100% - 32px);
+      max-width: 400px;
+    }
+    .music-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+      pointer-events: all;
+    }
+    .music-toast-inner {
+      background: rgba(12,37,24,0.97);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(184,150,46,0.4);
+      border-radius: 16px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+    }
+    .music-toast-note {
+      color: #D4AF37;
+      font-size: 22px;
+      flex-shrink: 0;
+      animation: note-pulse 2s ease-in-out infinite;
+    }
+    @keyframes note-pulse {
+      0%,100% { opacity: 0.8; transform: scale(1); }
+      50%      { opacity: 1;   transform: scale(1.15); }
+    }
+    .music-toast-body { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+    .music-toast-title {
+      font-family: 'Gilroy', 'Plus Jakarta Sans', sans-serif;
+      font-size: 13px; font-weight: 700; color: #F5EDD0;
+    }
+    .music-toast-desc {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 11px; color: rgba(240,216,120,0.6);
+    }
+    .music-toast-yes {
+      background: linear-gradient(135deg, #D4AF37, #B8960C);
+      color: #0C2518; border: none; border-radius: 9px;
+      padding: 8px 16px;
+      font-family: 'Gilroy', 'Plus Jakarta Sans', sans-serif;
+      font-size: 13px; font-weight: 800; cursor: pointer; flex-shrink: 0;
+      transition: opacity 0.2s;
+    }
+    .music-toast-yes:active { opacity: 0.8; }
+    .music-toast-no {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; color: rgba(240,216,120,0.5);
+      padding: 7px 11px; font-size: 16px; cursor: pointer; flex-shrink: 0;
+    }
+
     /* ── Sound Toggle (fixed, always visible when music loaded) ──────── */
     #sound-btn {
       position: fixed;
@@ -272,6 +337,19 @@
     </div>
   </div>
 
+  <!-- ══ Music consent toast ════════════════════════════════════════════ -->
+  <div id="music-toast" class="music-toast" aria-live="polite">
+    <div class="music-toast-inner">
+      <span class="music-toast-note">♪</span>
+      <div class="music-toast-body">
+        <span class="music-toast-title">Play Nasheed?</span>
+        <span class="music-toast-desc">Soft Islamic music in background</span>
+      </div>
+      <button class="music-toast-yes" onclick="consentMusic(true)">Play</button>
+      <button class="music-toast-no" onclick="consentMusic(false)">✕</button>
+    </div>
+  </div>
+
   <!-- ══ Sound button ═════════════════════════════════════════════════════ -->
   <button id="sound-btn" aria-label="Toggle music" onclick="toggleMute()">
     <i id="sound-icon" data-lucide="volume-2" width="20" height="20"></i>
@@ -289,15 +367,35 @@
   <!-- ══ Main Wedding Website ═════════════════════════════════════════════ -->
   <div class="phone-wrapper">
 
-    <!-- Hero -->
+    <!-- Hero — Cinematic Full Screen -->
     <section class="hero">
       <div class="hero-bg"></div>
       <div class="hero-gradient"></div>
-      <div class="hero-content">
-        <h1 class="hero-greeting">
+      <div class="hero-geo-pattern"></div>
+
+      <!-- Bismillah + Greeting -->
+      <div class="hero-top">
+        <img src="assets/bismillah.png" class="hero-bism" alt="" />
+        <p class="hero-greeting">
           Hey fam,
           <span>Assalamu Alaykum</span>
-        </h1>
+        </p>
+      </div>
+
+      <!-- Couple Names (cinematic center) -->
+      <div class="hero-names-wrap">
+        <p class="hero-event-type">Walima Reception</p>
+        <h1 class="hero-cname" id="hcn-groom">Mohammed Abdul Razak</h1>
+        <div class="hero-sep">
+          <span class="hero-sep-line"></span>
+          <span class="hero-sep-gem">✦ ✦ ✦</span>
+          <span class="hero-sep-line"></span>
+        </div>
+        <h1 class="hero-cname" id="hcn-bride">Henna Shireen</h1>
+      </div>
+
+      <!-- Date + Countdown -->
+      <div class="hero-bottom">
         <div class="hero-date-bar">
           <div class="hero-date-left">
             <span class="hero-date-label" data-i18n="date-label">Wedding date</span>
@@ -323,6 +421,11 @@
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- Scroll hint -->
+      <div class="hero-scroll-hint">
+        <i data-lucide="chevrons-down" width="22" height="22"></i>
       </div>
     </section>
 
@@ -807,11 +910,69 @@
         const btn = document.getElementById('btn-letsgo');
         const r   = btn.getBoundingClientRect();
         confettiBurst(r.left + r.width / 2, r.top + r.height / 2);
+        sessionStorage.setItem('musicWanted', '1');
+        startMusicAfterGesture(); // Let's Go = explicit music consent
+      } else {
+        showMusicToast(); // Skip = ask separately
       }
       const intro = document.getElementById('intro');
       intro.classList.add('closing');
       setTimeout(() => { intro.style.display = 'none'; }, 450);
     }
+
+    // ── Music consent toast ───────────────────────────────────────────
+    function showMusicToast() {
+      if (musicStarted || localStorage.getItem('musicDeclined') || sessionStorage.getItem('musicWanted')) return;
+      setTimeout(function() {
+        var toast = document.getElementById('music-toast');
+        if (toast) toast.classList.add('show');
+      }, 900);
+    }
+    function consentMusic(yes) {
+      document.getElementById('music-toast').classList.remove('show');
+      if (yes) {
+        sessionStorage.setItem('musicWanted', '1');
+        startMusicAfterGesture();
+      } else {
+        localStorage.setItem('musicDeclined', '1');
+      }
+    }
+    // Show toast on return visits (no intro shown)
+    if (document.documentElement.classList.contains('intro-seen')) {
+      showMusicToast();
+    }
+
+    // ── Letter-by-letter character reveal ────────────────────────────
+    function revealChars(el, startDelay, perCharDelay) {
+      if (!el) return;
+      const chars = [...el.textContent];
+      el.textContent = '';
+      chars.forEach(function(ch, i) {
+        const s = document.createElement('span');
+        s.className = 'char-reveal';
+        s.textContent = ch === ' ' ? '\u00A0' : ch;
+        s.style.animationDelay = (startDelay + i * perCharDelay) + 's';
+        el.appendChild(s);
+      });
+    }
+
+    // Hero names — fire on load
+    revealChars(document.getElementById('hcn-groom'), 0.8, 0.05);
+    revealChars(document.getElementById('hcn-bride'), 1.7, 0.06);
+
+    // Couple card names — fire when scrolled into view
+    const nameObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.querySelectorAll('.couple-firstname').forEach(function(el, i) {
+            revealChars(el, i * 0.35, 0.07);
+          });
+          nameObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.4 });
+    const coupleRow = document.querySelector('.couple-row');
+    if (coupleRow) nameObserver.observe(coupleRow);
 
     // ── Floating hearts from tap badge ───────────────────────────────
     function spawnHearts(el) {
